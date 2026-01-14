@@ -1,22 +1,20 @@
-Here's the improved `README.md` file, incorporating the new content while maintaining the existing structure and information:
-
 # JsToolBox
 
 JsToolBox is a collection of custom WinForms loader controls and utilities for VB.NET, intended as an advanced replacement and complement to the Visual Studio Toolbox. It provides reusable loader components (examples: trailing dots, circular loader) that are easy to drop into VB.NET WinForms projects.
 
-This repository contains controls and base classes designed for extendability, performance, and design-time friendliness in Visual Studio 2022.
+This repository contains controls and base classes designed for extendability, performance, and design-time friendliness in Visual Studio 2022 though it is presumably compatible with other versions of visual studio.
 
 ## Features
 
 - Reusable WinForms loader controls (e.g., `TrailingDotsLoader`, `CircularLoader`)
-- `LoaderBase` abstract base control with built-in timer/animation lifecycle
+- `LoaderBase` abstract base loader control with built-in timer/animation lifecycle
 - Design-time properties for color, speed, and appearance
 - Double-buffered painting to minimize flicker
 
 ## Requirements
 
 - Visual Studio 2022
-- .NET Framework or .NET version compatible with the included projects (see individual project TFMs)
+- .NET Framework or .NET version compatible with the included projects (see individual project TFMs) though the project is compiled using 4.8
 
 ## Getting Started
 
@@ -37,9 +35,21 @@ This repository contains controls and base classes designed for extendability, p
    - Drag the control onto a WinForms designer surface like any other control.
 
 ## Example Usage
+  - Here is an example of how TrailingDotsLoader can be added to the Designer view of a form
+```bash
+TrailingDotsLoader1.LoaderColor = Color.DeepSkyBlue
+TrailingDotsLoader1.DotCount = 12
+TrailingDotsLoader1.Radius = 20
+TrailingDotsLoader1.DotSize = 6
+TrailingDotsLoader1.Text = "Loading"
+TrailingDotsLoader1.ForeColor = Color.Gray
+TrailingDotsLoader1.Font = New Font("Segoe UI", 9, FontStyle.Bold)
 
+TrailingDotsLoader1.Start()
+```
 In the designer or at runtime, you can start and stop animations programmatically:
-
+
+
 ' Start a loader
 myLoader.Start()
 
@@ -50,9 +60,10 @@ myLoader.Stop()
 myLoader.LoaderColor = Color.OrangeRed
 
 ' Adjust speed (interval in milliseconds; minimum 1)
-myLoader.Speed = 75
+myLoader.Speed = 75
 
-The controls inherit from `LoaderBase`, which exposes the common properties and handles double-buffering and timer lifecycle. To create a new loader control, inherit from `JsToolBox.Base.LoaderBase` and implement the `OnTick` method to drive your animation.
+
+The Loader controls inherit from `LoaderBase`, which exposes the common properties and handles double-buffering and timer lifecycle. To create a new loader control, inherit from `JsToolBox.Base.LoaderBase` and implement the `OnTick` method to drive your animation.
 
 ## Project Structure
 
@@ -82,6 +93,5 @@ This project does not include a license file in the repository by default. Add a
 
 ## Contact
 
-For questions or discussion, open an issue on the repository.
+For questions or discussion, open an issue on the repository.
 
-This version maintains the original structure while ensuring clarity and coherence throughout the document. Each section is clearly defined, and the instructions are straightforward for users to follow.
