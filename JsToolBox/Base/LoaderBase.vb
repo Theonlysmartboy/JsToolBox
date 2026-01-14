@@ -1,29 +1,52 @@
-﻿Imports System.Drawing
+﻿Imports System.ComponentModel
+Imports System.Drawing
 Imports System.Windows.Forms
 
-Public MustInherit Class LoaderBase
-    Inherits Control
+Namespace Base
+    Public MustInherit Class LoaderBase
+        Inherits Control
 
-    Private _timer As Timer
+        ' Timer for animation
+        Private _timer As Timer
 
-    Public Property LoaderColor As Color = Color.DodgerBlue
-    Public Property Speed As Integer = 100 ' ms interval
+        ' Backing field for color
+        Private _loaderColor As Color = Color.DodgerBlue
 
-    Public Sub New()
-        Me.DoubleBuffered = True
-        _timer = New Timer()
-        _timer.Interval = Speed
-        AddHandler _timer.Tick, AddressOf OnTick
-    End Sub
+        ' Property visible in designer
+        <Browsable(True), Category("Appearance")>
+        Public Property LoaderColor As Color
+            Get
+                Return _loaderColor
+            End Get
+            Set(value As Color)
+                _loaderColor = value
+                Me.Invalidate() ' Redraw when color changes
+            End Set
+        End Property
 
-    Public Sub Start()
-        _timer.Start()
-    End Sub
+        ' Animation speed
+        Public Property Speed As Integer = 100
 
-    Public Sub [Stop]()
-        _timer.Stop()
-        Me.Invalidate()
-    End Sub
+        ' Constructor
+        Public Sub New()
+            Me.DoubleBuffered = True
+            _timer = New Timer()
+            _timer.Interval = Speed
+            AddHandler _timer.Tick, AddressOf OnTick
+        End Sub
 
-    Protected MustOverride Sub OnTick(sender As Object, e As EventArgs)
-End Class
+        ' Start animation
+        Public Sub Start()
+            _timer.Start()
+        End Sub
+
+        ' Stop animation
+        Public Sub [Stop]()
+            _timer.Stop()
+            Me.Invalidate()
+        End Sub
+
+        ' Must be implemented in derived loader
+        Protected MustOverride Sub OnTick(sender As Object, e As EventArgs)
+    End Class
+End Namespace
