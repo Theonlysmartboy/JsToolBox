@@ -35,7 +35,18 @@ This repository contains controls and base classes designed for extendability, p
    - Drag the control onto a WinForms designer surface like any other control.
 
 ## Example Usage
+  - Here is an example of how TrailingDotsLoader can be added to the Designer view of a form
+```bash
+TrailingDotsLoader1.LoaderColor = Color.DeepSkyBlue
+TrailingDotsLoader1.DotCount = 12
+TrailingDotsLoader1.Radius = 20
+TrailingDotsLoader1.DotSize = 6
+TrailingDotsLoader1.Text = "Loading"
+TrailingDotsLoader1.ForeColor = Color.Gray
+TrailingDotsLoader1.Font = New Font("Segoe UI", 9, FontStyle.Bold)
 
+TrailingDotsLoader1.Start()
+```
 In the designer or at runtime, you can start and stop animations programmatically:
 
 
@@ -83,3 +94,4 @@ This project does not include a license file in the repository by default. Add a
 ## Contact
 
 For questions or discussion, open an issue on the repository.
+
