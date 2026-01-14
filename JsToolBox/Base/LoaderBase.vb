@@ -6,13 +6,23 @@ Namespace Base
     Public MustInherit Class LoaderBase
         Inherits Control
 
-        ' Timer for animation
+        ' Timer
         Private _timer As Timer
 
-        ' Backing field for color
+        ' Backing fields
         Private _loaderColor As Color = Color.DodgerBlue
+        Private _speed As Integer = 100
 
-        ' Property visible in designer
+        Public Sub New()
+            Me.DoubleBuffered = True
+
+            _timer = New Timer()
+            _timer.Interval = _speed
+
+            AddHandler _timer.Tick, AddressOf OnTick
+        End Sub
+
+        ' Loader Color
         <Browsable(True), Category("Appearance")>
         Public Property LoaderColor As Color
             Get
@@ -20,19 +30,37 @@ Namespace Base
             End Get
             Set(value As Color)
                 _loaderColor = value
-                Me.Invalidate() ' Redraw when color changes
+                Me.Invalidate()
             End Set
         End Property
 
-        ' Animation speed
-        Public Property Speed As Integer = 100
+        ' Speed (fixed – now working)
+        <Browsable(True), Category("Behavior")>
+        Public Property Speed As Integer
+            Get
+                Return _speed
+            End Get
+            Set(value As Integer)
+                If value < 1 Then value = 1
+                _speed = value
+                _timer.Interval = value
+            End Set
+        End Property
 
-        ' Constructor
-        Public Sub New()
-            Me.DoubleBuffered = True
-            _timer = New Timer()
-            _timer.Interval = Speed
-            AddHandler _timer.Tick, AddressOf OnTick
+        ' Ensure repaint when text/font/forecolor change
+        Protected Overrides Sub OnTextChanged(e As EventArgs)
+            MyBase.OnTextChanged(e)
+            Me.Invalidate()
+        End Sub
+
+        Protected Overrides Sub OnFontChanged(e As EventArgs)
+            MyBase.OnFontChanged(e)
+            Me.Invalidate()
+        End Sub
+
+        Protected Overrides Sub OnForeColorChanged(e As EventArgs)
+            MyBase.OnForeColorChanged(e)
+            Me.Invalidate()
         End Sub
 
         ' Start animation
@@ -46,7 +74,8 @@ Namespace Base
             Me.Invalidate()
         End Sub
 
-        ' Must be implemented in derived loader
+        ' Required animation handler
         Protected MustOverride Sub OnTick(sender As Object, e As EventArgs)
+
     End Class
 End Namespace
