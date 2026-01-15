@@ -7,6 +7,7 @@ Public Class LoaderDemoForm
     Private flow As FlowLayoutPanel
 
     Public Sub New()
+        InitializeComponent()
         Me.Text = "JsToolBox Loaders Demo"
         Me.Size = New Size(900, 700)
         Me.StartPosition = FormStartPosition.CenterScreen
@@ -71,5 +72,10 @@ Public Class LoaderDemoForm
         Application.EnableVisualStyles()
         Application.SetCompatibleTextRenderingDefault(False)
         Application.Run(New LoaderDemoForm())
+    End Sub
+
+    Private Sub ChartsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ChartsToolStripMenuItem.Click
+        Dim chartForm As New ChartDemoForm()
+        chartForm.ShowDialog()
     End Sub
 End Class
