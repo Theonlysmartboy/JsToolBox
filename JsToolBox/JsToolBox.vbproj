@@ -70,10 +70,34 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Class1.vb" />
+    <Compile Include="Loaders\ChasingDotsLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Loaders\CircularLoader.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Loaders\DualRingLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Loaders\EqualizerBarsLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Loaders\FacebookShimmer.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Loaders\PulseLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Loaders\RippleLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Loaders\SpinningSquareLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Loaders\TrailingDotsLoader.vb">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Loaders\WaveLoader.vb">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
