@@ -4,31 +4,35 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{827F9DE9-F87A-4084-9A19-078651991AEB}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <RootNamespace>JsToolBox</RootNamespace>
-    <AssemblyName>JsToolBox</AssemblyName>
+    <ProjectGuid>{430540EF-F83A-4F6F-AEE4-7301A19CF501}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>Demo.My.MyApplication</StartupObject>
+    <RootNamespace>Demo</RootNamespace>
+    <AssemblyName>Demo</AssemblyName>
     <FileAlignment>512</FileAlignment>
-    <MyType>Windows</MyType>
+    <MyType>WindowsForms</MyType>
     <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <DefineDebug>true</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <OutputPath>bin\Debug\</OutputPath>
-    <DocumentationFile>JsToolBox.xml</DocumentationFile>
+    <DocumentationFile>Demo.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <DefineDebug>false</DefineDebug>
     <DefineTrace>true</DefineTrace>
     <Optimize>true</Optimize>
     <OutputPath>bin\Release\</OutputPath>
-    <DocumentationFile>JsToolBox.xml</DocumentationFile>
+    <DocumentationFile>Demo.xml</DocumentationFile>
     <NoWarn>42016,41999,42017,42018,42019,42032,42036,42020,42021,42022</NoWarn>
   </PropertyGroup>
   <PropertyGroup>
@@ -46,6 +50,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
@@ -60,45 +65,20 @@
     <Import Include="System.Collections" />
     <Import Include="System.Collections.Generic" />
     <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
     <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
     <Import Include="System.Linq" />
     <Import Include="System.Xml.Linq" />
     <Import Include="System.Threading.Tasks" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Base\LoaderBase.vb">
-      <SubType>Component</SubType>
+    <Compile Include="LoaderDemoForm.vb">
+      <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Class1.vb" />
-    <Compile Include="Loaders\ChasingDotsLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\CircularLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\DualRingLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\EqualizerBarsLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\FacebookShimmer.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\PulseLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\RippleLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\SpinningSquareLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\TrailingDotsLoader.vb">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Include="Loaders\WaveLoader.vb">
-      <SubType>Component</SubType>
+    <Compile Include="LoaderDemoForm.Designer.vb">
+      <DependentUpon>LoaderDemoForm.vb</DependentUpon>
+      <SubType>Form</SubType>
     </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
@@ -117,6 +97,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="LoaderDemoForm.resx">
+      <DependentUpon>LoaderDemoForm.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
@@ -134,9 +117,13 @@
       <CustomToolNamespace>My</CustomToolNamespace>
       <LastGenOutput>Settings.Designer.vb</LastGenOutput>
     </None>
+    <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Charts\" />
+    <ProjectReference Include="..\JsToolBox\JsToolBox.vbproj">
+      <Project>{827F9DE9-F87A-4084-9A19-078651991AEB}</Project>
+      <Name>JsToolBox</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>
