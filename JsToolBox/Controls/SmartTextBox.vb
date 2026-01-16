@@ -33,29 +33,28 @@ Namespace Controls
         Private _labelText As String = "Label"
         Private _smartType As SmartInputType = SmartInputType.Text
         Private _isFocused As Boolean = False
-        Private _floatProgress As Single = 0 '0 = down, 1 = up
+        Private _floatProgress As Single = 0
         Private ReadOnly _floatTimer As Timer
         Private _eyeVisible As Boolean = False
         Private _passwordHidden As Boolean = True
         Private ReadOnly _errorLabel As Label
-        Private _errorMessage As String = ""
         Private _isValid As Boolean = True
-
-        ' Left icon
         Private _leftIcon As Image
+        Private _placeholderText As String = ""
 
         ' Internal TextBox
         Private WithEvents _innerTextBox As New TextBox() With {
             .BorderStyle = BorderStyle.None,
-            .Location = New Point(4, 24),
             .Font = New Font("Segoe UI", 10)
         }
 
-        '------------------------------------------------------------
-        ' PUBLIC CUSTOMIZABLE PROPERTIES (Old API compatibility)
-        '------------------------------------------------------------
+        ' Customizable properties
         <Browsable(True)>
-        Public Shadows Property BorderColor As Color
+        Public Property FloatingSpeed As Single = 0.08
+        <Browsable(True)> Public Property FloatingLabelColor As Color = Color.Gray
+        <Browsable(True)> Public Property FloatingLabelActiveColor As Color = Color.DodgerBlue
+        <Browsable(True)> Public Property TextColor As Color = Color.Black
+        <Browsable(True)> Public Shadows Property BorderColor As Color
             Get
                 Return MyBase.BorderColor
             End Get
@@ -64,9 +63,7 @@ Namespace Controls
                 Invalidate()
             End Set
         End Property
-
-        <Browsable(True)>
-        Public Shadows Property BorderColorError As Color
+        <Browsable(True)> Public Shadows Property BorderColorError As Color
             Get
                 Return MyBase.BorderErrorColor
             End Get
@@ -75,49 +72,44 @@ Namespace Controls
                 Invalidate()
             End Set
         End Property
-
-        <Browsable(True)>
-        Public Property FloatingSpeed As Integer = 10
-
-        <Browsable(True)>
-        Public Property FloatingLabelColor As Color = Color.Gray
-        <Browsable(True)>
-        Public Property FloatingLabelActiveColor As Color = Color.DodgerBlue
-        <Browsable(True)>
-        Public Property ErrorColor As Color = Color.Red
-        <Browsable(True)>
-        Public Property TextColor As Color = Color.Black
-
-        <Browsable(True)>
-        Public Property LeftIcon As Image
+        <Browsable(True)> Public Property ErrorColor As Color = Color.Red
+        <Browsable(True)> Public Property LeftIcon As Image
             Get
                 Return _leftIcon
             End Get
             Set(value As Image)
                 _leftIcon = value
+                LayoutInnerTextBox()
                 Invalidate()
             End Set
         End Property
-
-        <Browsable(True)>
-        Public Property SmartType As SmartInputType
+        <Browsable(True)> Public Property LabelText As String
+            Get
+                Return _labelText
+            End Get
+            Set(value As String)
+                _labelText = value
+                Invalidate()
+            End Set
+        End Property
+        <Browsable(True)> Public Property SmartType As SmartInputType
             Get
                 Return _smartType
             End Get
             Set(value As SmartInputType)
                 _smartType = value
                 _eyeVisible = (value = SmartInputType.Password)
+                _innerTextBox.Multiline = (value = SmartInputType.Multiline)
+                LayoutInnerTextBox()
                 Invalidate()
             End Set
         End Property
-
-        <Browsable(True)>
-        Public Property LabelText As String
+        <Browsable(True)> Public Property PlaceholderText As String
             Get
-                Return _labelText
+                Return _placeholderText
             End Get
             Set(value As String)
-                _labelText = value
+                _placeholderText = value
                 Invalidate()
             End Set
         End Property
@@ -128,7 +120,7 @@ Namespace Controls
             End Get
             Set(value As String)
                 _innerTextBox.Text = value
-                ValidateInput()
+                _floatProgress = If(String.IsNullOrEmpty(value), 0, 1)
                 Invalidate()
             End Set
         End Property
@@ -143,10 +135,10 @@ Namespace Controls
         <Browsable(True)>
         Public Property ErrorMessage As String
             Get
-                Return _errorMessage
+                Return _errorLabel.Text
             End Get
             Set(value As String)
-                _errorMessage = value
+                _errorLabel.Text = value
                 ShowError(Not String.IsNullOrEmpty(value))
             End Set
         End Property
@@ -161,7 +153,7 @@ Namespace Controls
             ' Add inner TextBox
             Me.Controls.Add(_innerTextBox)
 
-            ' Timer for floating label animation
+            ' Floating timer
             _floatTimer = New Timer() With {.Interval = 15}
             AddHandler _floatTimer.Tick, AddressOf AnimateFloating
 
@@ -172,58 +164,47 @@ Namespace Controls
                 .Height = 15,
                 .Top = Me.Height - 15,
                 .Left = 0,
-                .Text = "",
                 .Visible = False
             }
             Me.Controls.Add(_errorLabel)
+
+            LayoutInnerTextBox()
+        End Sub
+
+        '------------------------------------------------------------
+        ' LAYOUT
+        '------------------------------------------------------------
+        Private Sub LayoutInnerTextBox()
+            If _innerTextBox Is Nothing OrElse Me.Width <= 0 Then Return
+            Dim left = If(_leftIcon IsNot Nothing, 28, 4)
+            Dim rightPadding = If(_eyeVisible, 26, 4)
+            _innerTextBox.Location = New Point(left, 24)
+            _innerTextBox.Width = Me.Width - left - rightPadding
+            _innerTextBox.Height = If(_smartType = SmartInputType.Multiline, Me.Height - 28, 20)
+            _innerTextBox.ScrollBars = If(_smartType = SmartInputType.Multiline, ScrollBars.Vertical, ScrollBars.None)
+        End Sub
+
+        Protected Overrides Sub OnResize(e As EventArgs)
+            MyBase.OnResize(e)
+            LayoutInnerTextBox()
         End Sub
 
         '------------------------------------------------------------
         ' EVENT HANDLERS
         '------------------------------------------------------------
         Private Sub _innerTextBox_Enter(sender As Object, e As EventArgs) Handles _innerTextBox.Enter
-            _isFocused = True
-            _floatTimer.Start()
-            _hasFocus = True
-            UpdateBorderColor()
-        End Sub
-
-        Private Sub _innerTextBox_Leave(sender As Object, e As EventArgs) Handles _innerTextBox.Leave
-            _isFocused = False
-            _floatTimer.Start()
-            ValidateInput()
-            _hasFocus = False
-            UpdateBorderColor()
-        End Sub
-
-        Protected Overrides Sub OnResize(e As EventArgs)
-            MyBase.OnResize(e)
-            If Me.Width <= 0 OrElse Me.Height <= 0 Then Return
-
-            If _innerTextBox IsNot Nothing Then
-                _innerTextBox.Width = If(_leftIcon IsNot Nothing, Me.Width - 28, Me.Width - 8)
-            End If
-        End Sub
-
-        Protected Overrides Sub OnEnter(e As EventArgs)
-            MyBase.OnEnter(e)
-            _isFocused = True
             _floatTimer.Start()
             _hasFocus = True
             UpdateBorderColor()
             If _smartType = SmartInputType.Currency Then RemoveCurrencyFormatting()
-            Invalidate()
         End Sub
 
-        Protected Overrides Sub OnLeave(e As EventArgs)
-            MyBase.OnLeave(e)
-            _isFocused = False
+        Private Sub _innerTextBox_Leave(sender As Object, e As EventArgs) Handles _innerTextBox.Leave
             _floatTimer.Start()
             _hasFocus = False
             UpdateBorderColor()
             If _smartType = SmartInputType.Currency Then ApplyCurrencyFormatting()
             ValidateInput()
-            Invalidate()
         End Sub
 
         Protected Overrides Sub OnKeyPress(e As KeyPressEventArgs)
@@ -251,42 +232,54 @@ Namespace Controls
             Dim g = e.Graphics
             g.SmoothingMode = SmoothingMode.AntiAlias
 
+            ' Floating label
             DrawFloatingLabel(g)
+
+            ' Bottom border
             DrawInputLine(g)
+
+            ' Text / placeholder
             DrawText(g)
 
+            ' Eye icon
             If _eyeVisible Then DrawEyeIcon(g)
-            If Not _isValid Then DrawErrorLine(g)
 
             ' Left icon
             If _leftIcon IsNot Nothing Then
                 g.DrawImage(_leftIcon, 2, 24, 20, 20)
-                _innerTextBox.Location = New Point(24, 24)
-                _innerTextBox.Width = Me.Width - 28
-            Else
-                _innerTextBox.Location = New Point(4, 24)
             End If
+
+            ' Error line
+            If Not _isValid Then DrawErrorLine(g)
         End Sub
 
         '------------------------------------------------------------
         ' DRAWING METHODS
         '------------------------------------------------------------
         Private Sub DrawFloatingLabel(g As Graphics)
+            ' Clamp float progress
+            Dim progress As Single = Math.Max(0, Math.Min(1, _floatProgress))
+
             Dim startY As Single = 22
             Dim endY As Single = 6
-            Dim y As Single = startY + (_floatProgress * (endY - startY))
+            Dim y As Single = startY + (progress * (endY - startY))
+
             Dim startSize As Single = 10
             Dim endSize As Single = 8
-            Dim size As Single = startSize + (_floatProgress * (endSize - startSize))
+            Dim size As Single = startSize + (progress * (endSize - startSize))
+            size = Math.Max(1, size) ' <-- never let size go below 1
+
             Dim c As Color = If(_isFocused, FloatingLabelActiveColor, FloatingLabelColor)
+
             Using f As New Font("Segoe UI", size), b As New SolidBrush(c)
                 g.DrawString(_labelText, f, b, If(_leftIcon IsNot Nothing, 24, 2), y)
             End Using
         End Sub
 
+
         Private Sub DrawInputLine(g As Graphics)
-            Dim lineY As Integer = Me.Height - 18
-            Using p As New Pen(If(_isValid, BorderColor, BorderColorError), If(_isFocused, 2, 1))
+            Dim lineY = Me.Height - 18
+            Using p As New Pen(If(_isValid, BorderColor, BorderColorError), If(_hasFocus, 2, 1))
                 g.DrawLine(p, 0, lineY, Me.Width, lineY)
             End Using
         End Sub
@@ -298,11 +291,13 @@ Namespace Controls
         End Sub
 
         Private Sub DrawText(g As Graphics)
-            Dim drawText As String = _innerTextBox.Text
-            If _smartType = SmartInputType.Password AndAlso _passwordHidden Then
+            Dim drawText = _innerTextBox.Text
+            If String.IsNullOrEmpty(drawText) AndAlso Not _isFocused AndAlso Not String.IsNullOrEmpty(_placeholderText) Then
+                drawText = _placeholderText
+            ElseIf _smartType = SmartInputType.Password AndAlso _passwordHidden Then
                 drawText = New String("*"c, drawText.Length)
             End If
-            Using f As New Font("Segoe UI", 10), b As New SolidBrush(TextColor)
+            Using f As New Font("Segoe UI", 10), b As New SolidBrush(If(String.IsNullOrEmpty(drawText) AndAlso Not _isFocused, Color.Gray, TextColor))
                 g.DrawString(drawText, f, b, If(_leftIcon IsNot Nothing, 24, 2), 24)
             End Using
         End Sub
@@ -323,11 +318,11 @@ Namespace Controls
         ' FLOATING ANIMATION
         '------------------------------------------------------------
         Private Sub AnimateFloating(sender As Object, e As EventArgs)
-            Dim target As Single = If(_isFocused OrElse _innerTextBox.Text.Length > 0, 1, 0)
+            Dim target As Single = If(_hasFocus OrElse _innerTextBox.Text.Length > 0, 1, 0)
             If target = 1 AndAlso _floatProgress < 1 Then
-                _floatProgress += 0.08
+                _floatProgress += FloatingSpeed
             ElseIf target = 0 AndAlso _floatProgress > 0 Then
-                _floatProgress -= 0.08
+                _floatProgress -= FloatingSpeed
             Else
                 _floatTimer.Stop()
             End If
@@ -353,12 +348,16 @@ Namespace Controls
                     If _innerTextBox.Text.Length > 0 AndAlso Not Double.TryParse(_innerTextBox.Text, Nothing) Then
                         ShowError(True, "Numbers only")
                     End If
+                Case SmartInputType.Currency
+                    If _innerTextBox.Text.Length > 0 AndAlso Not Double.TryParse(_innerTextBox.Text.Replace(",", ""), Nothing) Then
+                        ShowError(True, "Invalid number")
+                    End If
             End Select
         End Sub
 
         Private Sub ShowError(state As Boolean, Optional msg As String = "")
             _isValid = Not state
-            _errorLabel.Text = If(state, msg, "")
+            _errorLabel.Text = msg
             _errorLabel.Visible = state
             _hasError = state
             UpdateBorderColor()
@@ -370,7 +369,7 @@ Namespace Controls
         '------------------------------------------------------------
         Private Sub ApplyCurrencyFormatting()
             If _smartType = SmartInputType.Currency AndAlso IsNumeric(_innerTextBox.Text) Then
-                _innerTextBox.Text = FormatNumber(CDbl(_innerTextBox.Text), 2)
+                _innerTextBox.Text = FormatNumber(CDbl(_innerTextBox.Text.Replace(",", "")), 2)
             End If
         End Sub
 
