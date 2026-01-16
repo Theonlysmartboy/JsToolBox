@@ -8,9 +8,6 @@ Namespace Charts
     Public Class GaugeChart
         Inherits ChartBase
 
-        '=========================================================
-        ' Private fields
-        '=========================================================
         Private _minValue As Integer = 0
         Private _maxValue As Integer = 100
         Private _value As Integer = 0
@@ -145,7 +142,7 @@ Namespace Charts
             MyBase.OnPaint(e)
             Dim g = e.Graphics
             g.SmoothingMode = SmoothingMode.AntiAlias
-            Dim padding As Integer = 30 ' margin from edges
+            Dim padding As Integer = 35 ' margin from edges
             '--------------------------------------------------
             ' 1. Compute Diameter that ALWAYS fits inside control
             '--------------------------------------------------
@@ -208,33 +205,25 @@ Namespace Charts
                 Dim tickLength As Single = If(isMajor, radius * 0.25F, radius * 0.15F)
                 ' Base width: major ticks slightly thicker
                 Dim baseWidth As Single = If(isMajor, 1.2, 0.6F)
-
                 Dim rad As Double = angle * Math.PI / 180
-
                 ' Tip of the arrow (outermost)
                 Dim xTip As Single = cx + Math.Cos(rad) * (radius + tickMargin)
                 Dim yTip As Single = cy + Math.Sin(rad) * (radius + tickMargin)
-
                 ' Base of the arrow (slightly inside)
                 Dim innerRadius As Single = radius - tickLength
-
                 ' Left/right for base width
                 Dim leftAngle As Double = rad + Math.PI / 2
                 Dim rightAngle As Double = rad - Math.PI / 2
-
                 Dim xLeft As Single = cx + Math.Cos(rad) * innerRadius + Math.Cos(leftAngle) * baseWidth
                 Dim yLeft As Single = cy + Math.Sin(rad) * innerRadius + Math.Sin(leftAngle) * baseWidth
-
                 Dim xRight As Single = cx + Math.Cos(rad) * innerRadius + Math.Cos(rightAngle) * baseWidth
                 Dim yRight As Single = cy + Math.Sin(rad) * innerRadius + Math.Sin(rightAngle) * baseWidth
-
                 ' Triangle points for arrow tick
                 Dim pts As PointF() = {
-            New PointF(xTip, yTip),      ' tip
-            New PointF(xLeft, yLeft),    ' base left
-            New PointF(xRight, yRight)   ' base right
-        }
-
+                    New PointF(xTip, yTip),      ' tip
+                    New PointF(xLeft, yLeft),    ' base left
+                    New PointF(xRight, yRight)   ' base right
+                }
                 ' Draw tick as filled triangle
                 Using b As New SolidBrush(Color.Black)
                     g.FillPolygon(b, pts)
