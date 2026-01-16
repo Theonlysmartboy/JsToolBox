@@ -78,4 +78,9 @@ Public Class LoaderDemoForm
         Dim chartForm As New ChartDemoForm()
         chartForm.ShowDialog()
     End Sub
+
+    Private Sub ControlsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles ControlsToolStripMenuItem.Click
+        Dim controlsForm As New ControlsDemoForm()
+        controlsForm.ShowDialog()
+    End Sub
 End Class

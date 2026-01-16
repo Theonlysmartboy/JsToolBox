@@ -70,6 +70,9 @@
     <Compile Include="Base\ChartBase.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Base\Controls\ControlBase.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Base\LoaderBase.vb">
       <SubType>Component</SubType>
     </Compile>
@@ -104,6 +107,9 @@
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Class1.vb" />
+    <Compile Include="Controls\SmartTextBox.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Loaders\ChasingDotsLoader.vb">
       <SubType>Component</SubType>
     </Compile>

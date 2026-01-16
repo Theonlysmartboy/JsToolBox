@@ -24,12 +24,13 @@ Partial Class LoaderDemoForm
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ChartsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ControlsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'MenuStrip1
         '
-        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ChartsToolStripMenuItem})
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ChartsToolStripMenuItem, Me.ControlsToolStripMenuItem})
         Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
         Me.MenuStrip1.Name = "MenuStrip1"
         Me.MenuStrip1.Size = New System.Drawing.Size(800, 24)
@@ -41,6 +42,12 @@ Partial Class LoaderDemoForm
         Me.ChartsToolStripMenuItem.Name = "ChartsToolStripMenuItem"
         Me.ChartsToolStripMenuItem.Size = New System.Drawing.Size(53, 20)
         Me.ChartsToolStripMenuItem.Text = "Charts"
+        '
+        'ControlsToolStripMenuItem
+        '
+        Me.ControlsToolStripMenuItem.Name = "ControlsToolStripMenuItem"
+        Me.ControlsToolStripMenuItem.Size = New System.Drawing.Size(64, 20)
+        Me.ControlsToolStripMenuItem.Text = "Controls"
         '
         'LoaderDemoForm
         '
@@ -60,4 +67,5 @@ Partial Class LoaderDemoForm
 
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ChartsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ControlsToolStripMenuItem As ToolStripMenuItem
 End Class
