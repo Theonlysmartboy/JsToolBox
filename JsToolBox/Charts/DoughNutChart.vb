@@ -1,17 +1,14 @@
 ﻿Imports System.Windows.Forms.DataVisualization.Charting
 Imports JsToolBox.Base
 Namespace Charts
-    Public Class PieChart
+    Public Class DoughNutChart
         Inherits ChartBase
 
         Public Sub New()
             MyBase.New()
-            Me.ChartType = SeriesChartType.Pie
+            Me.ChartType = SeriesChartType.Doughnut
             ' Optionaly show labels outside the slices
             _chart.Series(0)("PieLabelStyle") = "Outside"
-            _chart.AccessibleDescription = "Pie Chart"
-            _chart.AccessibleName = "Pie Chart"
-            _chart.Series(0).ToolTip = "#VALX: #PERCENT{P2}"
             _chart.Series(0).IsValueShownAsLabel = True
         End Sub
 

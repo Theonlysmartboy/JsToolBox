@@ -1,17 +1,17 @@
 ﻿Imports System.Windows.Forms.DataVisualization.Charting
 Imports JsToolBox.Base
+
 Namespace Charts
-    Public Class PieChart
+    Public Class ColumnChart
         Inherits ChartBase
 
         Public Sub New()
             MyBase.New()
-            Me.ChartType = SeriesChartType.Pie
-            ' Optionaly show labels outside the slices
-            _chart.Series(0)("PieLabelStyle") = "Outside"
-            _chart.AccessibleDescription = "Pie Chart"
-            _chart.AccessibleName = "Pie Chart"
+            Me.ChartType = SeriesChartType.Column
             _chart.Series(0).ToolTip = "#VALX: #PERCENT{P2}"
+            _chart.AccessibleDescription = "Column Chart"
+            _chart.AccessibleName = "Column Chart"
+            _chart.Series(0).IsXValueIndexed = True
             _chart.Series(0).IsValueShownAsLabel = True
         End Sub
 
