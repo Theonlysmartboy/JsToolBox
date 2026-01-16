@@ -80,6 +80,12 @@
     <Compile Include="ChartDemoForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="ControlsDemoForm.Designer.vb">
+      <DependentUpon>ControlsDemoForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="ControlsDemoForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="LoaderDemoForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +112,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ChartDemoForm.resx">
       <DependentUpon>ChartDemoForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="ControlsDemoForm.resx">
+      <DependentUpon>ControlsDemoForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoaderDemoForm.resx">
       <DependentUpon>LoaderDemoForm.vb</DependentUpon>
