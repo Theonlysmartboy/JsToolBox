@@ -165,7 +165,7 @@ Namespace Charts
             '--------------------------------------------------
             DrawGaugeArc(g, cx, cy, radius)
             DrawTicks(g, cx, cy, radius, tickMargin)
-            DrawNeedle(g, cx, cy, radius * 0.85F) ' slightly shorter
+            DrawNeedle(g, cx, cy, radius * 0.65F) ' slightly shorter
             DrawTextValue(g, cx, cy - radius * 0.45F)
         End Sub
 
@@ -179,18 +179,14 @@ Namespace Charts
                 (_zoneGreen, _zoneYellow, Color.Gold),
                 (_zoneYellow, _zoneRed, Color.Red)
             }
-
             Dim penWidth As Single = radius * 0.15F
-
             For Each z In zones
                 Dim startVal = z.Item1
                 Dim endVal = z.Item2
                 Dim col = z.Item3
                 If endVal <= startVal Then Continue For
-
                 Dim startAngle = 180 + (startVal / totalRange) * 180
                 Dim sweep = (endVal - startVal) / totalRange * 180
-
                 ' Centered rectangle for full circle around cx, cy
                 Dim rect As New RectangleF(cx - radius, cy - radius, radius * 2, radius * 2)
                 Using p As New Pen(col, penWidth)
@@ -208,17 +204,40 @@ Namespace Charts
             Dim endAngle As Integer = 360
             For angle As Integer = startAngle To endAngle Step 5
                 Dim isMajor As Boolean = (angle Mod 15 = 0)
-                Dim thickness As Single = If(isMajor, 3.5F, 1.5F)
-                Dim tickLength As Single = If(isMajor, radius * 0.18F, radius * 0.1F)
+                ' Length: major ticks longer than minor ticks
+                Dim tickLength As Single = If(isMajor, radius * 0.25F, radius * 0.15F)
+                ' Base width: major ticks slightly thicker
+                Dim baseWidth As Single = If(isMajor, 1.2, 0.6F)
 
                 Dim rad As Double = angle * Math.PI / 180
-                Dim xOuter As Single = cx + Math.Cos(rad) * (radius + tickMargin)
-                Dim yOuter As Single = cy + Math.Sin(rad) * (radius + tickMargin)
-                Dim xInner As Single = cx + Math.Cos(rad) * (radius - tickLength)
-                Dim yInner As Single = cy + Math.Sin(rad) * (radius - tickLength)
 
-                Using p As New Pen(Color.Black, thickness)
-                    g.DrawLine(p, xInner, yInner, xOuter, yOuter)
+                ' Tip of the arrow (outermost)
+                Dim xTip As Single = cx + Math.Cos(rad) * (radius + tickMargin)
+                Dim yTip As Single = cy + Math.Sin(rad) * (radius + tickMargin)
+
+                ' Base of the arrow (slightly inside)
+                Dim innerRadius As Single = radius - tickLength
+
+                ' Left/right for base width
+                Dim leftAngle As Double = rad + Math.PI / 2
+                Dim rightAngle As Double = rad - Math.PI / 2
+
+                Dim xLeft As Single = cx + Math.Cos(rad) * innerRadius + Math.Cos(leftAngle) * baseWidth
+                Dim yLeft As Single = cy + Math.Sin(rad) * innerRadius + Math.Sin(leftAngle) * baseWidth
+
+                Dim xRight As Single = cx + Math.Cos(rad) * innerRadius + Math.Cos(rightAngle) * baseWidth
+                Dim yRight As Single = cy + Math.Sin(rad) * innerRadius + Math.Sin(rightAngle) * baseWidth
+
+                ' Triangle points for arrow tick
+                Dim pts As PointF() = {
+            New PointF(xTip, yTip),      ' tip
+            New PointF(xLeft, yLeft),    ' base left
+            New PointF(xRight, yRight)   ' base right
+        }
+
+                ' Draw tick as filled triangle
+                Using b As New SolidBrush(Color.Black)
+                    g.FillPolygon(b, pts)
                 End Using
             Next
         End Sub
