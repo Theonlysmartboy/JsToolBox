@@ -91,6 +91,9 @@
     <Compile Include="Charts\FunnelChart.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Charts\GaugeChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Charts\LineChart.vb">
       <SubType>UserControl</SubType>
     </Compile>
