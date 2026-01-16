@@ -100,6 +100,7 @@ Namespace Controls
                 _smartType = value
                 _eyeVisible = (value = SmartInputType.Password)
                 _innerTextBox.Multiline = (value = SmartInputType.Multiline)
+                _innerTextBox.UseSystemPasswordChar = (value = SmartInputType.Password AndAlso _passwordHidden)
                 LayoutInnerTextBox()
                 Invalidate()
             End Set
@@ -149,14 +150,11 @@ Namespace Controls
         Public Sub New()
             Me.DoubleBuffered = True
             Me.Height = 52
-
             ' Add inner TextBox
             Me.Controls.Add(_innerTextBox)
-
             ' Floating timer
             _floatTimer = New Timer() With {.Interval = 15}
             AddHandler _floatTimer.Tick, AddressOf AnimateFloating
-
             ' Error label
             _errorLabel = New Label() With {
                 .AutoSize = False,
@@ -167,7 +165,6 @@ Namespace Controls
                 .Visible = False
             }
             Me.Controls.Add(_errorLabel)
-
             LayoutInnerTextBox()
         End Sub
 
@@ -182,6 +179,7 @@ Namespace Controls
             _innerTextBox.Width = Me.Width - left - rightPadding
             _innerTextBox.Height = If(_smartType = SmartInputType.Multiline, Me.Height - 28, 20)
             _innerTextBox.ScrollBars = If(_smartType = SmartInputType.Multiline, ScrollBars.Vertical, ScrollBars.None)
+            _innerTextBox.UseSystemPasswordChar = (_smartType = SmartInputType.Password AndAlso _passwordHidden)
         End Sub
 
         Protected Overrides Sub OnResize(e As EventArgs)
@@ -193,18 +191,22 @@ Namespace Controls
         ' EVENT HANDLERS
         '------------------------------------------------------------
         Private Sub _innerTextBox_Enter(sender As Object, e As EventArgs) Handles _innerTextBox.Enter
+            _isFocused = True
             _floatTimer.Start()
             _hasFocus = True
             UpdateBorderColor()
             If _smartType = SmartInputType.Currency Then RemoveCurrencyFormatting()
+            _innerTextBox.UseSystemPasswordChar = (_smartType = SmartInputType.Password AndAlso _passwordHidden)
         End Sub
 
         Private Sub _innerTextBox_Leave(sender As Object, e As EventArgs) Handles _innerTextBox.Leave
+            _isFocused = False
             _floatTimer.Start()
             _hasFocus = False
             UpdateBorderColor()
             If _smartType = SmartInputType.Currency Then ApplyCurrencyFormatting()
             ValidateInput()
+            _innerTextBox.UseSystemPasswordChar = (_smartType = SmartInputType.Password AndAlso _passwordHidden)
         End Sub
 
         Protected Overrides Sub OnKeyPress(e As KeyPressEventArgs)
@@ -220,6 +222,7 @@ Namespace Controls
                 Dim eyeRect = GetEyeRect()
                 If eyeRect.Contains(e.Location) Then
                     _passwordHidden = Not _passwordHidden
+                    _innerTextBox.UseSystemPasswordChar = _passwordHidden
                     Invalidate()
                 End If
             End If
@@ -231,24 +234,18 @@ Namespace Controls
         Protected Overrides Sub OnPaint(e As PaintEventArgs)
             Dim g = e.Graphics
             g.SmoothingMode = SmoothingMode.AntiAlias
-
-            ' Floating label
-            DrawFloatingLabel(g)
-
-            ' Bottom border
-            DrawInputLine(g)
-
-            ' Text / placeholder
-            DrawText(g)
-
-            ' Eye icon
-            If _eyeVisible Then DrawEyeIcon(g)
-
             ' Left icon
             If _leftIcon IsNot Nothing Then
                 g.DrawImage(_leftIcon, 2, 24, 20, 20)
             End If
-
+            ' Floating label
+            DrawFloatingLabel(g)
+            ' Bottom border
+            DrawInputLine(g)
+            ' Text / placeholder
+            DrawText(g)
+            ' Eye icon
+            If _eyeVisible Then DrawEyeIcon(g)
             ' Error line
             If Not _isValid Then DrawErrorLine(g)
         End Sub
@@ -259,27 +256,22 @@ Namespace Controls
         Private Sub DrawFloatingLabel(g As Graphics)
             ' Clamp float progress
             Dim progress As Single = Math.Max(0, Math.Min(1, _floatProgress))
-
             Dim startY As Single = 22
             Dim endY As Single = 6
             Dim y As Single = startY + (progress * (endY - startY))
-
             Dim startSize As Single = 10
             Dim endSize As Single = 8
             Dim size As Single = startSize + (progress * (endSize - startSize))
-            size = Math.Max(1, size) ' <-- never let size go below 1
-
+            size = Math.Max(1, size)
             Dim c As Color = If(_isFocused, FloatingLabelActiveColor, FloatingLabelColor)
-
             Using f As New Font("Segoe UI", size), b As New SolidBrush(c)
                 g.DrawString(_labelText, f, b, If(_leftIcon IsNot Nothing, 24, 2), y)
             End Using
         End Sub
 
-
         Private Sub DrawInputLine(g As Graphics)
             Dim lineY = Me.Height - 18
-            Using p As New Pen(If(_isValid, BorderColor, BorderColorError), If(_hasFocus, 2, 1))
+            Using p As New Pen(If(_isValid, BorderColor, BorderColorError), If(_isFocused, 2, 1))
                 g.DrawLine(p, 0, lineY, Me.Width, lineY)
             End Using
         End Sub
@@ -294,8 +286,6 @@ Namespace Controls
             Dim drawText = _innerTextBox.Text
             If String.IsNullOrEmpty(drawText) AndAlso Not _isFocused AndAlso Not String.IsNullOrEmpty(_placeholderText) Then
                 drawText = _placeholderText
-            ElseIf _smartType = SmartInputType.Password AndAlso _passwordHidden Then
-                drawText = New String("*"c, drawText.Length)
             End If
             Using f As New Font("Segoe UI", 10), b As New SolidBrush(If(String.IsNullOrEmpty(drawText) AndAlso Not _isFocused, Color.Gray, TextColor))
                 g.DrawString(drawText, f, b, If(_leftIcon IsNot Nothing, 24, 2), 24)
@@ -318,7 +308,7 @@ Namespace Controls
         ' FLOATING ANIMATION
         '------------------------------------------------------------
         Private Sub AnimateFloating(sender As Object, e As EventArgs)
-            Dim target As Single = If(_hasFocus OrElse _innerTextBox.Text.Length > 0, 1, 0)
+            Dim target As Single = If(_isFocused OrElse _innerTextBox.Text.Length > 0, 1, 0)
             If target = 1 AndAlso _floatProgress < 1 Then
                 _floatProgress += FloatingSpeed
             ElseIf target = 0 AndAlso _floatProgress > 0 Then
@@ -326,6 +316,7 @@ Namespace Controls
             Else
                 _floatTimer.Stop()
             End If
+            _floatProgress = Math.Max(0, Math.Min(1, _floatProgress))
             Invalidate()
         End Sub
 
@@ -378,7 +369,5 @@ Namespace Controls
                 _innerTextBox.Text = _innerTextBox.Text.Replace(",", "")
             End If
         End Sub
-
     End Class
-
 End Namespace
