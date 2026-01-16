@@ -144,40 +144,92 @@ Namespace Charts
         '=========================================================
         Protected Overrides Sub OnPaint(e As PaintEventArgs)
             MyBase.OnPaint(e)
+
             Dim g = e.Graphics
             g.SmoothingMode = SmoothingMode.AntiAlias
-            Dim rect = New Rectangle(10, 10, Width - 20, Height * 2 - 40)
-            Dim radius = rect.Width \ 2
-            Dim cx = Width \ 2
-            Dim cy = Height - 10
-            ' Draw multi-zone arc (green/yellow/red)
-            DrawGaugeArc(g, rect)
-            ' Draw needle
-            DrawNeedle(g, cx, cy, radius - 20)
-            ' Draw text
-            DrawTextValue(g, cx, cy - 20)
-        End Sub
 
+            Dim padding As Integer = 10
+
+            '--------------------------------------------------
+            ' 1. Compute Diameter that ALWAYS fits inside control
+            '--------------------------------------------------
+            ' The semi-circle height = diameter / 2
+            ' The control must have height >= (diameter / 2 + padding)
+            ' and width >= (diameter + padding)
+
+            Dim maxDiameterWidth As Integer = Width - padding * 2
+            Dim maxDiameterHeight As Integer = (Height - padding * 2) * 2  ' because semi circle height = D/2
+
+            Dim diameter As Integer = Math.Min(maxDiameterWidth, maxDiameterHeight)
+            If diameter < 10 Then Exit Sub   ' control too small
+
+            '--------------------------------------------------
+            ' 2. Compute bounding rectangle for FULL circle
+            '--------------------------------------------------
+            Dim r As New Rectangle((Width - diameter) \ 2, Height - diameter - padding, diameter, diameter)
+
+            '--------------------------------------------------
+            ' 3. Compute center + radius
+            '--------------------------------------------------
+            Dim cx As Single = r.X + r.Width / 2.0F
+            Dim cy As Single = r.Y + r.Height
+            Dim radius As Single = diameter / 2.0F
+            '--------------------------------------------------
+            ' 4. Draw arcs, ticks, needle and value
+            '--------------------------------------------------
+            DrawGaugeArc(g, cx, cy, radius)
+            DrawTicks(g, cx, cy, radius - (diameter * 0.12F))   ' auto scaled
+            DrawNeedle(g, cx, cy, radius - (diameter * 0.18F))  ' auto scaled
+            DrawTextValue(g, cx, cy - (diameter * 0.28F))        ' auto scaled
+        End Sub
 
         '=========================================================
         ' Draw colored zones
         '=========================================================
-        Private Sub DrawGaugeArc(g As Graphics, r As Rectangle)
+        Private Sub DrawGaugeArc(g As Graphics, cx As Single, cy As Single, radius As Single)
             Dim totalRange = _maxValue - _minValue
             Dim zones = {
                 (0, _zoneGreen, Color.LimeGreen),
                 (_zoneGreen, _zoneYellow, Color.Gold),
                 (_zoneYellow, _zoneRed, Color.Red)
             }
+            Dim penWidth As Single = radius * 0.15F  ' Auto-scaled thickness
             For Each z In zones
                 Dim startVal = z.Item1
                 Dim endVal = z.Item2
                 Dim col = z.Item3
                 If endVal <= startVal Then Continue For
+                ' Compute start/sweep angles
                 Dim startAngle = 180 + (startVal / totalRange) * 180
                 Dim sweep = (endVal - startVal) / totalRange * 180
-                Using p As New Pen(col, 20)
-                    g.DrawArc(p, New RectangleF(r.X, r.Y, r.Width, r.Height), CSng(startAngle), CSng(sweep))
+                ' Draw using the same center as ticks
+                Dim rect As New RectangleF(cx - radius, cy - radius, radius * 2, radius * 2)
+                Using p As New Pen(col, penWidth)
+                    p.LineJoin = LineJoin.Round
+                    g.DrawArc(p, rect, CSng(startAngle), CSng(sweep))
+                End Using
+            Next
+        End Sub
+
+        '=========================================================
+        'Draw Ticks
+        '==========================================================
+        Private Sub DrawTicks(g As Graphics, cx As Single, cy As Single, radius As Single)
+            Dim startAngle As Integer = 180
+            Dim endAngle As Integer = 360
+            For angle As Integer = startAngle To endAngle Step 5
+                Dim isMajor As Boolean = (angle Mod 15 = 0)
+                Dim innerRadius As Single = radius - If(isMajor, 35, 20)
+                Dim thickness As Single = If(isMajor, 3.5F, 1.5F)
+                Dim rad As Double = angle * Math.PI / 180
+                Dim xOuter As Double = cx + Math.Cos(rad) * radius
+                Dim yOuter As Double = cy + Math.Sin(rad) * radius
+                Dim xInner As Double = cx + Math.Cos(rad) * innerRadius
+                Dim yInner As Double = cy + Math.Sin(rad) * innerRadius
+                Using p As New Pen(Color.Black, thickness)
+                    g.DrawLine(p,
+                CSng(xInner), CSng(yInner),
+                CSng(xOuter), CSng(yOuter))
                 End Using
             Next
         End Sub
@@ -190,15 +242,33 @@ Namespace Charts
             Dim percent = (_animatedValue - _minValue) / range
             Dim angle = 180 + (percent * 180)
             Dim rad = angle * Math.PI / 180
+            ' Needle endpoint
             Dim x2 = cx + Math.Cos(rad) * length
             Dim y2 = cy + Math.Sin(rad) * length
             Dim x2s As Single = CSng(x2)
             Dim y2s As Single = CSng(y2)
+            ' Draw needle shaft
             Using p As New Pen(Color.Black, 4)
                 g.DrawLine(p, CSng(cx), CSng(cy), x2s, y2s)
             End Using
+            ' === ARROW HEAD ===
+            Dim headSize As Single = 18
+            Dim halfWidth As Single = 6
+            Dim leftAngle = rad + Math.PI / 2
+            Dim rightAngle = rad - Math.PI / 2
+            Dim xLeft = x2 + Math.Cos(leftAngle) * halfWidth
+            Dim yLeft = y2 + Math.Sin(leftAngle) * halfWidth
+            Dim xRight = x2 + Math.Cos(rightAngle) * halfWidth
+            Dim yRight = y2 + Math.Sin(rightAngle) * halfWidth
+            Dim xTip = x2 + Math.Cos(rad) * headSize
+            Dim yTip = y2 + Math.Sin(rad) * headSize
+            Dim pts As PointF() = {
+                New PointF(xLeft, yLeft),
+                New PointF(xRight, yRight),
+                New PointF(xTip, yTip)
+            }
             Using b As New SolidBrush(Color.Black)
-                g.FillEllipse(b, cx - 6, cy - 6, 12, 12)
+                g.FillPolygon(b, pts)
             End Using
         End Sub
 

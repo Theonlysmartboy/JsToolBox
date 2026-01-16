@@ -24,6 +24,7 @@ Partial Class LoaderDemoForm
     Private Sub InitializeComponent()
         Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
         Me.ChartsToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GaugeChart1 = New JsToolBox.Charts.GaugeChart()
         Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
@@ -42,11 +43,30 @@ Partial Class LoaderDemoForm
         Me.ChartsToolStripMenuItem.Size = New System.Drawing.Size(53, 20)
         Me.ChartsToolStripMenuItem.Text = "Charts"
         '
+        'GaugeChart1
+        '
+        Me.GaugeChart1.ChartType = System.Windows.Forms.DataVisualization.Charting.SeriesChartType.Column
+        Me.GaugeChart1.GradientEnd = System.Drawing.Color.DimGray
+        Me.GaugeChart1.GradientStart = System.Drawing.Color.LightGray
+        Me.GaugeChart1.Location = New System.Drawing.Point(203, 38)
+        Me.GaugeChart1.Maximum = 100
+        Me.GaugeChart1.Minimum = 0
+        Me.GaugeChart1.Name = "GaugeChart1"
+        Me.GaugeChart1.Palette = System.Windows.Forms.DataVisualization.Charting.ChartColorPalette.BrightPastel
+        Me.GaugeChart1.Size = New System.Drawing.Size(400, 200)
+        Me.GaugeChart1.TabIndex = 1
+        Me.GaugeChart1.Title = ""
+        Me.GaugeChart1.Value = 0
+        Me.GaugeChart1.ZoneGreen = 40
+        Me.GaugeChart1.ZoneRed = 100
+        Me.GaugeChart1.ZoneYellow = 70
+        '
         'LoaderDemoForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.GaugeChart1)
         Me.Controls.Add(Me.MenuStrip1)
         Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "LoaderDemoForm"
@@ -60,4 +80,5 @@ Partial Class LoaderDemoForm
 
     Friend WithEvents MenuStrip1 As MenuStrip
     Friend WithEvents ChartsToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents GaugeChart1 As JsToolBox.Charts.GaugeChart
 End Class
