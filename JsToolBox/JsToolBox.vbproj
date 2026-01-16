@@ -76,10 +76,31 @@
     <Compile Include="Charts\BarChart.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Charts\ColumnChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charts\DoughNutChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charts\FastLineChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charts\FunnelChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
     <Compile Include="Charts\LineChart.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Charts\PieChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charts\PointChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charts\PyramidChart.vb">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Charts\RadarChart.vb">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Include="Class1.vb" />

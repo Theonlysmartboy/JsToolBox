@@ -1,10 +1,11 @@
-﻿Imports JsToolBox.Charts
+﻿Imports System.Reflection
 Imports JsToolBox.Base
 
 Public Class ChartDemoForm
     Inherits Form
 
     Private flow As FlowLayoutPanel
+    Private ReadOnly rnd As New Random()
 
     Public Sub New()
         InitializeComponent()
@@ -23,16 +24,31 @@ Public Class ChartDemoForm
         }
         Me.Controls.Add(flow)
 
-        ' Add charts
-        AddChartDemo("Pie Chart", New PieChart() With {.Title = "Sales Distribution", .Palette = DataVisualization.Charting.ChartColorPalette.Bright})
-        AddChartDemo("Bar Chart", New BarChart() With {.Title = "Revenue by Month", .Palette = DataVisualization.Charting.ChartColorPalette.EarthTones})
-        AddChartDemo("Line Chart", New LineChart() With {.Title = "Profit Trend", .Palette = DataVisualization.Charting.ChartColorPalette.Pastel})
+        ' Discover and add all chart controls in JsToolBox.Charts namespace
+        Dim asm = Assembly.GetAssembly(GetType(ChartBase))
+        If asm IsNot Nothing Then
+            For Each t In asm.GetTypes()
+                If t.IsClass AndAlso Not t.IsAbstract AndAlso GetType(ChartBase).IsAssignableFrom(t) AndAlso t.Namespace = "JsToolBox.Charts" Then
+                    Try
+                        Dim chart As ChartBase = CType(Activator.CreateInstance(t), ChartBase)
+                        ' Give a human-friendly title if none provided by the control
+                        If String.IsNullOrWhiteSpace(chart.Title) Then
+                            chart.Title = t.Name
+                        End If
+                        AddChartDemo(chart.Title, chart)
+                    Catch ex As Exception
+                        ' If a control fails to construct, skip it (keeps demo robust)
+                    End Try
+                End If
+            Next
+        End If
+
     End Sub
 
     Private Sub AddChartDemo(title As String, chart As ChartBase)
         ' Container panel
         Dim panel As New Panel() With {
-            .Size = New Size(flow.ClientSize.Width - 40, 350),
+            .Size = New Size(Math.Max(600, flow.ClientSize.Width - 40), 350),
             .BorderStyle = BorderStyle.FixedSingle,
             .Padding = New Padding(10)
         }
@@ -74,6 +90,14 @@ Public Class ChartDemoForm
                 chart.SetData(New String() {"Jan", "Feb", "Mar", "Apr"}, New Double() {12000, 15000, 10000, 18000})
             Case "LineChart"
                 chart.SetData(New String() {"Q1", "Q2", "Q3", "Q4"}, New Double() {5000, 7000, 6500, 9000})
+            Case Else
+                ' Generic fallback for newly added charts: generate simple category data
+                Dim categories = New String() {"Cat A", "Cat B", "Cat C", "Cat D", "Cat E", "Cat F"}
+                Dim values(categories.Length - 1) As Double
+                For i As Integer = 0 To values.Length - 1
+                    values(i) = Math.Round(100 + rnd.NextDouble() * 900, 2)
+                Next
+                chart.SetData(categories, values)
         End Select
     End Sub
 
