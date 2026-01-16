@@ -56,7 +56,7 @@ Partial Class LoaderDemoForm
         Me.GaugeChart1.Size = New System.Drawing.Size(400, 200)
         Me.GaugeChart1.TabIndex = 1
         Me.GaugeChart1.Title = ""
-        Me.GaugeChart1.Value = 0
+        Me.GaugeChart1.Value = 50
         Me.GaugeChart1.ZoneGreen = 40
         Me.GaugeChart1.ZoneRed = 100
         Me.GaugeChart1.ZoneYellow = 70
