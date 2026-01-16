@@ -173,11 +173,14 @@ Namespace Controls
         '------------------------------------------------------------
         Private Sub LayoutInnerTextBox()
             If _innerTextBox Is Nothing OrElse Me.Width <= 0 Then Return
+
             Dim left = If(_leftIcon IsNot Nothing, 28, 4)
             Dim rightPadding = If(_eyeVisible, 26, 4)
-            _innerTextBox.Location = New Point(left, 24)
+
+            ' Inner textbox starts a bit lower to leave room for floating label
+            _innerTextBox.Location = New Point(left, 18)
             _innerTextBox.Width = Me.Width - left - rightPadding
-            _innerTextBox.Height = If(_smartType = SmartInputType.Multiline, Me.Height - 28, 20)
+            _innerTextBox.Height = If(_smartType = SmartInputType.Multiline, Me.Height - 28, 22)
             _innerTextBox.ScrollBars = If(_smartType = SmartInputType.Multiline, ScrollBars.Vertical, ScrollBars.None)
             _innerTextBox.UseSystemPasswordChar = (_smartType = SmartInputType.Password AndAlso _passwordHidden)
         End Sub
@@ -256,21 +259,24 @@ Namespace Controls
         Private Sub DrawFloatingLabel(g As Graphics)
             ' Clamp float progress
             Dim progress As Single = Math.Max(0, Math.Min(1, _floatProgress))
-            Dim startY As Single = 22
-            Dim endY As Single = 6
+            ' If empty and not focused, draw as placeholder inside textbox
+            Dim startY As Single = 20 ' inside textbox
+            Dim endY As Single = 4    ' floating on top
             Dim y As Single = startY + (progress * (endY - startY))
             Dim startSize As Single = 10
             Dim endSize As Single = 8
             Dim size As Single = startSize + (progress * (endSize - startSize))
             size = Math.Max(1, size)
+            ' Color depends on focus
             Dim c As Color = If(_isFocused, FloatingLabelActiveColor, FloatingLabelColor)
             Using f As New Font("Segoe UI", size), b As New SolidBrush(c)
-                g.DrawString(_labelText, f, b, If(_leftIcon IsNot Nothing, 24, 2), y)
+                g.DrawString(_labelText, f, b, If(_leftIcon IsNot Nothing, 24, 4), y)
             End Using
         End Sub
 
         Private Sub DrawInputLine(g As Graphics)
-            Dim lineY = Me.Height - 18
+            ' Draw border at bottom
+            Dim lineY = Me.Height - 2 ' almost at bottom
             Using p As New Pen(If(_isValid, BorderColor, BorderColorError), If(_isFocused, 2, 1))
                 g.DrawLine(p, 0, lineY, Me.Width, lineY)
             End Using
