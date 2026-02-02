@@ -8,11 +8,12 @@ Namespace Charts
             MyBase.New()
             Me.ChartType = SeriesChartType.Pie
             ' Optionaly show labels outside the slices
-            _chart.Series(0)("PieLabelStyle") = "Outside"
+            Dim s = EnsureDefaultSeries()
+            s("PieLabelStyle") = "Outside"
             _chart.AccessibleDescription = "Pie Chart"
             _chart.AccessibleName = "Pie Chart"
-            _chart.Series(0).ToolTip = "#VALX: #PERCENT{P2}"
-            _chart.Series(0).IsValueShownAsLabel = True
+            s.ToolTip = "#VALX: #PERCENT{P2}"
+            s.IsValueShownAsLabel = True
         End Sub
 
         Protected Overrides Sub OnTick(sender As Object, e As EventArgs)

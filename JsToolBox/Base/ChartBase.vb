@@ -212,7 +212,10 @@ Namespace Base
         <Browsable(False)>
         Public Sub SetData(xValues() As String, yValues() As Double)
             If xValues Is Nothing OrElse yValues Is Nothing OrElse xValues.Length = 0 OrElse yValues.All(Function(v) v = 0) Then
-                ShowEmptyState()
+                If Not Me.IsHandleCreated Then
+                    AddHandler Me.HandleCreated, Sub(sender, e) ShowEmptyState()
+                    Return
+                End If
                 Return
             End If
             If xValues.Length <> yValues.Length Then
@@ -255,34 +258,44 @@ Namespace Base
                 ' Axis-based charts (Column, Bar, Line, etc)
                 area.AxisX.Enabled = AxisEnabled.True
                 area.AxisY.Enabled = AxisEnabled.True
+                area.AxisX.Minimum = 0
+                area.AxisX.Maximum = 5
+                area.AxisX.Interval = 1
                 area.AxisY.Minimum = 0
                 area.AxisY.Maximum = 10
                 area.AxisY.Interval = 2
                 area.AxisX.MajorGrid.Enabled = True
                 area.AxisY.MajorGrid.Enabled = True
+                area.AxisX.MajorGrid.LineColor = Color.Gainsboro
+                area.AxisY.MajorGrid.LineColor = Color.Gainsboro
+                ' IMPORTANT: use numeric X value
                 Dim sEmpty As New Series("Empty") With {
                     .ChartType = Me.ChartType,
                     .IsVisibleInLegend = False,
-                    .Color = Color.Transparent
+                    .Color = Color.Transparent,
+                    .IsXValueIndexed = False
                 }
-                sEmpty.Points.AddXY("", 0)
+                sEmpty.Points.AddXY(0, 0)
                 _chart.Series.Add(sEmpty)
             End If
             AddWatermark()
+            _chart.Invalidate()
+            _chart.Update()
         End Sub
 
         Private Sub AddWatermark()
+            Dim area = _chart.ChartAreas(0)
             Dim annotation As New TextAnnotation()
             annotation.Text = _emptyMessage
             annotation.ForeColor = Color.Gray
             annotation.Font = New Font("Segoe UI", 11, FontStyle.Italic)
+            ' Bind to axes
+            annotation.AxisX = area.AxisX
+            annotation.AxisY = area.AxisY
+            ' Center using actual axis values
+            annotation.AnchorX = (area.AxisX.Minimum + area.AxisX.Maximum) / 2
+            annotation.AnchorY = (area.AxisY.Minimum + area.AxisY.Maximum) / 2
             annotation.Alignment = ContentAlignment.MiddleCenter
-            annotation.AnchorAlignment = ContentAlignment.MiddleCenter
-            annotation.X = 50
-            annotation.Y = 50
-            annotation.Width = 100
-            annotation.Height = 100
-            annotation.IsSizeAlwaysRelative = True
             _chart.Annotations.Add(annotation)
         End Sub
 
