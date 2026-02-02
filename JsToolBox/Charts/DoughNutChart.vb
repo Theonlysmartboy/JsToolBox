@@ -6,11 +6,21 @@ Namespace Charts
 
         Public Sub New()
             MyBase.New()
+
+            Dim s As New Series("Series1") With {
+        .ChartType = SeriesChartType.Doughnut
+    }
+
+            _chart.Series.Clear()
+            _chart.Series.Add(s)
+
+            s("DoughnutRadius") = "60"
+            s("PieLabelStyle") = "Outside"
+            s.IsValueShownAsLabel = True
+
             Me.ChartType = SeriesChartType.Doughnut
-            ' Optionaly show labels outside the slices
-            _chart.Series(0)("PieLabelStyle") = "Outside"
-            _chart.Series(0).IsValueShownAsLabel = True
         End Sub
+
 
         Protected Overrides Sub OnTick(sender As Object, e As EventArgs)
             ' Optional: Add subtle rotation animation if desired

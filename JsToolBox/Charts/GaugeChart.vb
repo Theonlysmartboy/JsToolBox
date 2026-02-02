@@ -275,7 +275,7 @@ Namespace Charts
         ' Draw numeric value
         '=========================================================
         Private Sub DrawTextValue(g As Graphics, cx As Single, cy As Single)
-            Dim txt = $"{CInt(_animatedValue)}"
+            Dim txt = $"{CInt(_animatedValue)} %"
             Dim f As New Font("Segoe UI", 18, FontStyle.Bold)
             Dim size = g.MeasureString(txt, f)
             g.DrawString(txt, f, Brushes.Black, cx - size.Width / 2, cy - size.Height / 2)
