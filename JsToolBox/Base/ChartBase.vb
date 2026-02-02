@@ -2,6 +2,7 @@
 Imports System.Drawing
 Imports System.Windows.Forms
 Imports System.Windows.Forms.DataVisualization.Charting
+
 Namespace Base
     Public MustInherit Class ChartBase
         Inherits UserControl
@@ -12,16 +13,34 @@ Namespace Base
         Private _animationTimer As Timer
         Private _glowIncrement As Integer = 1 ' How fast the grow/shrink happens 
         Private _maxGlowSize As Integer = 12
+        Private _titleLabel As Label
+        Private _container As Panel
+        Private _emptyMessage As String = "No Data Available"
+        Private _isEmpty As Boolean = False
+
         Public Sub New()
             Me.SetStyle(ControlStyles.SupportsTransparentBackColor, True)
             Me.BackColor = Color.Transparent
             Me.DoubleBuffered = True
             Me.Size = New Size(400, 300)
+            _container = New Panel With {
+                .Dock = DockStyle.Fill,
+                .BackColor = Color.Transparent
+            }
+            _titleLabel = New Label With {
+                .Dock = DockStyle.Top,
+                .Height = 35,
+                .TextAlign = ContentAlignment.MiddleCenter,
+                .Font = New Font("Segoe UI", 12, FontStyle.Bold),
+                .ForeColor = Color.Black
+            }
             _chart = New Chart() With {
                 .Dock = DockStyle.Fill,
                 .BackColor = Color.Transparent
             }
             Me.Controls.Add(_chart)
+            Me.Controls.Add(_container)
+            Me.Controls.Add(_titleLabel)
             Dim area As New ChartArea("MainArea")
             area.BackColor = Color.Transparent
             area.BorderColor = Color.Transparent
@@ -31,11 +50,16 @@ Namespace Base
             legend.BackColor = Color.Transparent
             legend.ForeColor = Color.Black
             _chart.Legends.Add(legend)
-            Me.Title = Me.GetType().Name.Replace("Chart", "").Replace("DoughNut", "Doughnut")
             ApplyDefaultStyling()
             AddHandler _chart.MouseMove, AddressOf Chart_MouseMove
             AddHandler _chart.MouseLeave, AddressOf Chart_MouseLeave
+        End Sub
 
+        Protected Overrides Sub OnCreateControl()
+            MyBase.OnCreateControl()
+            If String.IsNullOrWhiteSpace(Me.Title) Then
+                Me.Title = Me.Name
+            End If
         End Sub
 
         ' Hover detection 
@@ -53,6 +77,7 @@ Namespace Base
                 End If
             End If
         End Sub
+
         Private Sub AnimateHoveredPoint(sender As Object, e As EventArgs)
             If _hoveredPoint IsNot Nothing Then
                 ' Apply glow effect using a lightened color 
@@ -62,9 +87,11 @@ Namespace Base
                 _hoveredPoint.BorderWidth = 2
             End If
         End Sub
+
         Private Sub Chart_MouseLeave(sender As Object, e As EventArgs)
             ResetPreviousPoint()
         End Sub
+
         Private Sub ResetPreviousPoint()
             If _hoveredPoint IsNot Nothing Then
                 ' Restore original color 
@@ -73,22 +100,28 @@ Namespace Base
                 _hoveredPoint = Nothing
             End If
         End Sub
+
         ' Designer Properties 
         <Browsable(True), Category("Appearance"), DefaultValue("")>
         Public Property Title As String
             Get
-                If _chart.Titles.Count = 0 Then Return ""
-                Return _chart.Titles(0).Text
+                Return _titleLabel.Text
             End Get
             Set(value As String)
-                _chart.Titles.Clear()
-                If Not String.IsNullOrWhiteSpace(value) Then
-                    Dim t As New Title(value)
-                    t.Docking = Docking.Top
-                    t.Alignment = ContentAlignment.TopCenter
-                    t.Font = New Font("Segoe UI", 12, FontStyle.Bold)
-                    t.ForeColor = Color.Black
-                    _chart.Titles.Add(t)
+                _titleLabel.Text = value
+                _titleLabel.Visible = Not String.IsNullOrWhiteSpace(value)
+            End Set
+        End Property
+
+        <Browsable(True), Category("Appearance")>
+        Public Property EmptyMessage As String
+            Get
+                Return _emptyMessage
+            End Get
+            Set(value As String)
+                _emptyMessage = value
+                If _isEmpty Then
+                    ShowEmptyState()
                 End If
             End Set
         End Property
@@ -102,6 +135,7 @@ Namespace Base
                 _chart.Palette = value
             End Set
         End Property
+
         <Browsable(True), Category("Appearance"), DefaultValue(True)>
         Public Property ShowLegend As Boolean
             Get
@@ -111,6 +145,7 @@ Namespace Base
                 _chart.Legends(0).Enabled = value
             End Set
         End Property
+
         <Browsable(True), Category("Axes"), DefaultValue("")>
         Public Property AxisXTitle As String
             Get
@@ -120,6 +155,7 @@ Namespace Base
                 _chart.ChartAreas(0).AxisX.Title = value
             End Set
         End Property
+
         <Browsable(True), Category("Axes"), DefaultValue("")>
         Public Property AxisYTitle As String
             Get
@@ -129,6 +165,7 @@ Namespace Base
                 _chart.ChartAreas(0).AxisY.Title = value
             End Set
         End Property
+
         <Browsable(True), Category("Data"), DefaultValue("Series1")>
         Public Property SeriesName As String
             Get
@@ -143,6 +180,7 @@ Namespace Base
                 End If
             End Set
         End Property
+
         Private _chartType As SeriesChartType = SeriesChartType.Column
         <Browsable(True), Category("Appearance")>
         Public Property ChartType As SeriesChartType
@@ -156,6 +194,7 @@ Namespace Base
                 Next
             End Set
         End Property
+
         <Browsable(False)>
         Public WriteOnly Property DataSource As DataTable
             Set(value As DataTable)
@@ -169,10 +208,11 @@ Namespace Base
                 Next
             End Set
         End Property
+
         <Browsable(False)>
         Public Sub SetData(xValues() As String, yValues() As Double)
-            If xValues Is Nothing OrElse yValues Is Nothing OrElse xValues.Length = 0 Then
-                ShowEmptyGrid()
+            If xValues Is Nothing OrElse yValues Is Nothing OrElse xValues.Length = 0 OrElse yValues.All(Function(v) v = 0) Then
+                ShowEmptyState()
                 Return
             End If
             If xValues.Length <> yValues.Length Then
@@ -194,19 +234,56 @@ Namespace Base
             Return colors(index Mod colors.Length)
         End Function
 
-        Private Sub ShowEmptyGrid()
+        Private Sub ShowEmptyState()
+            _isEmpty = True
             _chart.Series.Clear()
-            Dim s As New Series("Empty") With {
-                .ChartType = Me.ChartType,
-                .IsVisibleInLegend = False
-            }
-            If Me.ChartType = SeriesChartType.Doughnut Then
-                s.Points.AddXY("No Data", 1)
-                s.Points(0).Color = Color.Gainsboro
+            Dim area = _chart.ChartAreas(0)
+            ' Remove previous annotations
+            _chart.Annotations.Clear()
+            If Me.ChartType = SeriesChartType.Pie OrElse Me.ChartType = SeriesChartType.Doughnut Then
+                Dim s As New Series("Empty") With {
+                    .ChartType = Me.ChartType,
+                    .IsVisibleInLegend = False
+                }
+                s.Points.AddXY("Empty", 1)
+                s.Points(0).Color = Color.FromArgb(160, Color.Gainsboro)
+                If Me.ChartType = SeriesChartType.Doughnut Then
+                    s("DoughnutRadius") = "65"
+                End If
+                _chart.Series.Add(s)
             Else
-                s.Points.AddXY("", 0)
+                ' Axis-based charts (Column, Bar, Line, etc)
+                area.AxisX.Enabled = AxisEnabled.True
+                area.AxisY.Enabled = AxisEnabled.True
+                area.AxisY.Minimum = 0
+                area.AxisY.Maximum = 10
+                area.AxisY.Interval = 2
+                area.AxisX.MajorGrid.Enabled = True
+                area.AxisY.MajorGrid.Enabled = True
+                Dim sEmpty As New Series("Empty") With {
+                    .ChartType = Me.ChartType,
+                    .IsVisibleInLegend = False,
+                    .Color = Color.Transparent
+                }
+                sEmpty.Points.AddXY("", 0)
+                _chart.Series.Add(sEmpty)
             End If
-            _chart.Series.Add(s)
+            AddWatermark()
+        End Sub
+
+        Private Sub AddWatermark()
+            Dim annotation As New TextAnnotation()
+            annotation.Text = _emptyMessage
+            annotation.ForeColor = Color.Gray
+            annotation.Font = New Font("Segoe UI", 11, FontStyle.Italic)
+            annotation.Alignment = ContentAlignment.MiddleCenter
+            annotation.AnchorAlignment = ContentAlignment.MiddleCenter
+            annotation.X = 50
+            annotation.Y = 50
+            annotation.Width = 100
+            annotation.Height = 100
+            annotation.IsSizeAlwaysRelative = True
+            _chart.Annotations.Add(annotation)
         End Sub
 
         Private Sub ApplyDefaultStyling()
