@@ -155,7 +155,8 @@ Namespace Charts
             '--------------------------------------------------
             Dim radius As Single = diameter / 2.0F
             Dim tickMargin As Single = radius * 0.08F ' small offset for ticks to touch arc
-            Dim cy As Single = Height - padding - radius * 0.1F  ' move slightly down so top fits
+            Dim titleSpace As Integer = 35 ' same as title label height
+            Dim cy As Single = Height - padding - radius * 0.1F + (titleSpace / 2)
             Dim cx As Single = Width / 2.0F  ' bottom margin
             '--------------------------------------------------
             ' 3. Draw gauge arcs, ticks, needle, and value

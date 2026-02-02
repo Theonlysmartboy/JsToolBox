@@ -210,26 +210,40 @@ Namespace Base
         End Property
 
         <Browsable(False)>
-        Public Sub SetData(xValues() As String, yValues() As Double)
-            If xValues Is Nothing OrElse yValues Is Nothing OrElse xValues.Length = 0 OrElse yValues.All(Function(v) v = 0) Then
-                If Not Me.IsHandleCreated Then
-                    AddHandler Me.HandleCreated, Sub(sender, e) ShowEmptyState()
-                    Return
-                End If
+        Public Sub SetData(xValues As String(), yValues As Double())
+            ' Reset state
+            _isEmpty = False
+            _chart.Annotations.Clear()
+            ' Validate input
+            If xValues Is Nothing OrElse yValues Is Nothing OrElse xValues.Length = 0 OrElse xValues.Length <> yValues.Length Then
+                ShowEmptyState()
                 Return
             End If
-            If xValues.Length <> yValues.Length Then
-                Throw New ArgumentException("X and Y arrays must match length")
+            ' Ensure a series exists
+            If _chart.Series.Count = 0 Then
+                _chart.Series.Add("Default")
             End If
-            _chart.Series.Clear()
-            Dim series As New Series(SeriesName) With {
-                .ChartType = Me.ChartType
-            }
-            _chart.Series.Add(series)
+            Dim series = _chart.Series(0)
+            series.Points.Clear()
+            series.ChartType = Me.ChartType
+            ' Add points
             For i As Integer = 0 To xValues.Length - 1
-                Dim p = series.Points.AddXY(xValues(i), yValues(i))
-                series.Points(p).Color = GetColor(i)
+                Dim pointIndex = series.Points.AddXY(xValues(i), yValues(i))
+                Dim point = series.Points(pointIndex)
+                point.Color = GetColor(i)
+                ' Pie/Doughnut: show only percentage inside, tooltip shows value
+                If Me.ChartType = SeriesChartType.Pie OrElse Me.ChartType = SeriesChartType.Doughnut Then
+                    point.Label = "#PERCENT{P0}"         ' inside slice: 29%, 45%, etc
+                    point.ToolTip = "#VALY{N0}"          ' tooltip: 749, 1,234, etc
+                    point.LegendText = "#AXISLABEL"      ' legend shows Q1, Q2, etc
+                Else
+                    ' Bars/columns/lines: label = formatted value, tooltip = value with thousand separator
+                    point.Label = point.YValues(0).ToString("N0")  ' e.g., 1,234
+                    point.ToolTip = $"{point.AxisLabel}: {point.YValues(0):N0}"  ' e.g., Jan: 999,999
+                End If
             Next
+            ' Apply type-specific formatting
+            ApplyChartFormatting(series)
         End Sub
 
         Private Function GetColor(index As Integer) As Color
@@ -240,47 +254,8 @@ Namespace Base
         Private Sub ShowEmptyState()
             _isEmpty = True
             _chart.Series.Clear()
-            Dim area = _chart.ChartAreas(0)
-            ' Remove previous annotations
             _chart.Annotations.Clear()
-            If Me.ChartType = SeriesChartType.Pie OrElse Me.ChartType = SeriesChartType.Doughnut Then
-                Dim s As New Series("Empty") With {
-                    .ChartType = Me.ChartType,
-                    .IsVisibleInLegend = False
-                }
-                s.Points.AddXY("Empty", 1)
-                s.Points(0).Color = Color.FromArgb(160, Color.Gainsboro)
-                If Me.ChartType = SeriesChartType.Doughnut Then
-                    s("DoughnutRadius") = "65"
-                End If
-                _chart.Series.Add(s)
-            Else
-                ' Axis-based charts (Column, Bar, Line, etc)
-                area.AxisX.Enabled = AxisEnabled.True
-                area.AxisY.Enabled = AxisEnabled.True
-                area.AxisX.Minimum = 0
-                area.AxisX.Maximum = 5
-                area.AxisX.Interval = 1
-                area.AxisY.Minimum = 0
-                area.AxisY.Maximum = 10
-                area.AxisY.Interval = 2
-                area.AxisX.MajorGrid.Enabled = True
-                area.AxisY.MajorGrid.Enabled = True
-                area.AxisX.MajorGrid.LineColor = Color.Gainsboro
-                area.AxisY.MajorGrid.LineColor = Color.Gainsboro
-                ' IMPORTANT: use numeric X value
-                Dim sEmpty As New Series("Empty") With {
-                    .ChartType = Me.ChartType,
-                    .IsVisibleInLegend = False,
-                    .Color = Color.Transparent,
-                    .IsXValueIndexed = False
-                }
-                sEmpty.Points.AddXY(0, 0)
-                _chart.Series.Add(sEmpty)
-            End If
             AddWatermark()
-            _chart.Invalidate()
-            _chart.Update()
         End Sub
 
         Private Sub AddWatermark()
@@ -311,6 +286,44 @@ Namespace Base
             area.BackSecondaryColor = Color.Transparent
             area.BorderDashStyle = ChartDashStyle.NotSet
             area.ShadowColor = Color.Transparent
+        End Sub
+
+        Private Sub ApplyChartFormatting(series As Series)
+            If _chart.ChartAreas.Count = 0 Then
+                _chart.ChartAreas.Add(New ChartArea("Default"))
+            End If
+            Dim area = _chart.ChartAreas(0)
+
+            Select Case Me.ChartType
+                Case SeriesChartType.Bar, SeriesChartType.Column, SeriesChartType.Line, SeriesChartType.FastLine
+                    area.RecalculateAxesScale()
+                    AutoScaleYAxis(area)
+
+                Case SeriesChartType.Pie, SeriesChartType.Doughnut
+                    _chart.Legends(0).Enabled = True
+                    area.AxisX.Enabled = AxisEnabled.False
+                    area.AxisY.Enabled = AxisEnabled.False
+                    series.IsValueShownAsLabel = True
+                    series.Label = "#PERCENT{P0}"       ' inside slice shows percentage
+                    series("PieLabelStyle") = "Inside"
+                    series.LegendText = "#AXISLABEL"    ' category names in legend
+                    series.ToolTip = "#VALY{N0}"        ' value on hover
+            End Select
+        End Sub
+
+        Private Sub AutoScaleYAxis(area As ChartArea)
+            If _chart.Series.Count = 0 Then Return
+            If _chart.Series(0).Points.Count = 0 Then Return
+            Dim maxValue = _chart.Series(0).Points.Max(Function(p) p.YValues(0))
+            If maxValue >= 1000000000 Then
+                area.AxisY.LabelStyle.Format = "0,,,'B'"
+            ElseIf maxValue >= 1000000 Then
+                area.AxisY.LabelStyle.Format = "0,,'M'"
+            ElseIf maxValue >= 1000 Then
+                area.AxisY.LabelStyle.Format = "0,'K'"
+            Else
+                area.AxisY.LabelStyle.Format = "N0"
+            End If
         End Sub
 
         Protected Function EnsureDefaultSeries() As Series
