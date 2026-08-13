@@ -2,7 +2,7 @@
     ''' <summary>
     ''' Enum for SmartTree indicator position
     ''' </summary>      
-    Public Class SmartTreeIndicatorPosition
+    Public Class SmartTreeViewIndicatorPosition
 
     End Class
 End Namespace

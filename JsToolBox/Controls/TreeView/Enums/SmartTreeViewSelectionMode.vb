@@ -2,7 +2,7 @@
     ''' <summary>
     ''' Enum for SmartTree selection mode
     ''' </summary>
-    Public Class SmartTreeSelectionMode
+    Public Class SmartTreeViewSelectionMode
 
     End Class
 End Namespace
