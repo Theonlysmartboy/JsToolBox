@@ -293,12 +293,10 @@ Namespace Base
                 _chart.ChartAreas.Add(New ChartArea("Default"))
             End If
             Dim area = _chart.ChartAreas(0)
-
             Select Case Me.ChartType
                 Case SeriesChartType.Bar, SeriesChartType.Column, SeriesChartType.Line, SeriesChartType.FastLine
                     area.RecalculateAxesScale()
                     AutoScaleYAxis(area)
-
                 Case SeriesChartType.Pie, SeriesChartType.Doughnut
                     _chart.Legends(0).Enabled = True
                     area.AxisX.Enabled = AxisEnabled.False

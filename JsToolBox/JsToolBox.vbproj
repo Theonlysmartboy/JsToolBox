@@ -113,6 +113,11 @@
     <Compile Include="Controls\SmartTextBox.vb">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="Controls\SmartTreeView.vb" />
+    <Compile Include="Controls\TreeView\Enums\SmartTreeIndicatorPosition.vb" />
+    <Compile Include="Controls\TreeView\Enums\SmartTreeSelectionMode.vb" />
+    <Compile Include="Controls\TreeView\Nodes\SmartTreeNode.vb" />
+    <Compile Include="Controls\TreeView\Nodes\SmartTreeViewNodeCollection.vb" />
     <Compile Include="Loaders\ChasingDotsLoader.vb">
       <SubType>Component</SubType>
     </Compile>
