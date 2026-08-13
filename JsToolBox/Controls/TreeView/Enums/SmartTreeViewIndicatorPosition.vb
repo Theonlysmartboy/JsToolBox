@@ -1,8 +1,11 @@
 ﻿Namespace Controls.TreeView.Enums
-    ''' <summary>
-    ''' Enum for SmartTree indicator position
-    ''' </summary>      
-    Public Class SmartTreeViewIndicatorPosition
 
-    End Class
+    ''' <summary>
+    ''' Determines the position of the checkbox or radio button
+    ''' relative to the node text.
+    ''' </summary>
+    Public Enum SmartTreeViewIndicatorPosition
+        BeforeText
+        AfterText
+    End Enum
 End Namespace

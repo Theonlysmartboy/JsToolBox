@@ -5,6 +5,8 @@ Namespace Controls.TreeView
     Friend Class SmartTreeViewHitTestInfo
         Public Property Node As Nodes.SmartTreeViewNode
         Public Property GlyphBounds As Rectangle
+        Public Property IndicatorBounds As Rectangle
+        Public Property TextBounds As Rectangle
         Public Property NodeBounds As Rectangle
         Public Property Level As Integer
     End Class

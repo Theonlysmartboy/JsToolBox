@@ -1,8 +1,11 @@
 ﻿Namespace Controls.TreeView.Enums
-    ''' <summary>
-    ''' Enum for SmartTree selection mode
-    ''' </summary>
-    Public Class SmartTreeViewSelectionMode
 
-    End Class
+    ''' <summary>
+    ''' Determines how nodes are selected.
+    ''' </summary>
+    Public Enum SmartTreeViewSelectionMode
+        SingleSelect
+        MultiSelect
+    End Enum
+
 End Namespace

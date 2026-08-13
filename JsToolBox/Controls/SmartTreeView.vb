@@ -1,6 +1,7 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
 Imports System.Windows.Forms
+Imports JsToolBox.Controls.TreeView.Enums
 Imports JsToolBox.Controls.TreeView.Nodes
 
 Namespace Controls.TreeView
@@ -10,7 +11,6 @@ Namespace Controls.TreeView
 
         Private ReadOnly _nodes As SmartTreeViewNodeCollection
         Private ReadOnly _hitTestItems As New List(Of SmartTreeViewHitTestInfo)
-        Private Const NodeHeight As Integer = 24
         Private Const IndentWidth As Integer = 20
         Private Const GlyphSize As Integer = 12
 
@@ -26,7 +26,36 @@ Namespace Controls.TreeView
             Me.Font = New Font("Segoe UI", 9.0F)
             Me.Size = New Size(300, 250)
             Me.TabStop = True
+            IndicatorPosition = SmartTreeViewIndicatorPosition.BeforeText
+            NodeHeight = 24
+            ParentNodeBackColor = Color.Empty
+            ShowNodeDividers = False
+            NodeDividerColor = Color.Empty
         End Sub
+
+        <Category("Appearance")>
+        <DefaultValue(SmartTreeViewIndicatorPosition.BeforeText)>
+        Public Property IndicatorPosition As SmartTreeViewIndicatorPosition
+
+        <Category("Appearance")>
+        <DefaultValue(GetType(Color), "")>
+        Public Property ParentNodeBackColor As Color
+
+        <Category("Appearance")>
+        <DefaultValue(False)>
+        Public Property ShowNodeDividers As Boolean
+
+        <Category("Appearance")>
+        <DefaultValue(GetType(Color), "")>
+        Public Property NodeDividerColor As Color
+
+        <Category("Appearance")>
+        <DefaultValue(24)>
+        Public Property NodeHeight As Integer
+
+        <Category("Behavior")>
+        <DefaultValue(SmartTreeViewSelectionMode.MultiSelect)>
+        Public Property SelectionMode As SmartTreeViewSelectionMode
 
         <DesignerSerializationVisibility(DesignerSerializationVisibility.Content)>
         Public ReadOnly Property Nodes As SmartTreeViewNodeCollection
@@ -48,6 +77,11 @@ Namespace Controls.TreeView
             Dim x As Integer = level * IndentWidth
             Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)
             Dim glyphRect As Rectangle
+            If node.HasChildren AndAlso ParentNodeBackColor <> Color.Empty Then
+                Using backgroundBrush As New SolidBrush(ParentNodeBackColor)
+                    graphics.FillRectangle(backgroundBrush, nodeBounds)
+                End Using
+            End If
             If node.HasChildren Then
                 glyphRect = New Rectangle(x, currentY + 6, GlyphSize, GlyphSize)
             Else
@@ -64,6 +98,12 @@ Namespace Controls.TreeView
             Using textBrush As New SolidBrush(If(node.Enabled, ForeColor, Color.Gray))
                 graphics.DrawString(node.Text, Font, textBrush, textX, currentY + 3)
             End Using
+            If ShowNodeDividers Then
+                Dim dividerColor As Color = If(NodeDividerColor = Color.Empty, Color.LightGray, NodeDividerColor)
+                Using dividerPen As New Pen(dividerColor)
+                    graphics.DrawLine(dividerPen, 0, currentY + NodeHeight - 1, Width, currentY + NodeHeight - 1)
+                End Using
+            End If
             currentY += NodeHeight
             If node.Expanded AndAlso node.HasChildren Then
                 For Each child As SmartTreeViewNode In node.Nodes

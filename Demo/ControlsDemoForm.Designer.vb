@@ -29,12 +29,57 @@ Partial Class ControlsDemoForm
         Dim SmartTreeViewNode5 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
         Dim SmartTreeViewNode6 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
         Dim SmartTreeViewNode7 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Me.SmartTreeView1 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SmartTextBox4 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox3 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox2 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox1 = New JsToolBox.Controls.SmartTextBox()
-        Me.SmartTreeView1 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SuspendLayout()
+        '
+        'SmartTreeView1
+        '
+        Me.SmartTreeView1.BackColor = System.Drawing.Color.White
+        Me.SmartTreeView1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.SmartTreeView1.ForeColor = System.Drawing.Color.Black
+        Me.SmartTreeView1.Location = New System.Drawing.Point(168, 27)
+        Me.SmartTreeView1.Name = "SmartTreeView1"
+        Me.SmartTreeView1.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.SmartTreeView1.NodeHeight = 25
+        SmartTreeViewNode1.Expanded = True
+        SmartTreeViewNode3.Tag = Nothing
+        SmartTreeViewNode3.Text = "View Users"
+        SmartTreeViewNode3.Value = Nothing
+        SmartTreeViewNode4.Tag = Nothing
+        SmartTreeViewNode4.Text = "View accounts"
+        SmartTreeViewNode4.Value = Nothing
+        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode3)
+        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode4)
+        SmartTreeViewNode2.Tag = Nothing
+        SmartTreeViewNode2.Text = "Admin"
+        SmartTreeViewNode2.Value = Nothing
+        SmartTreeViewNode6.Tag = Nothing
+        SmartTreeViewNode6.Text = "View acounts"
+        SmartTreeViewNode6.Value = Nothing
+        SmartTreeViewNode7.Tag = Nothing
+        SmartTreeViewNode7.Text = "Create Reports"
+        SmartTreeViewNode7.Value = Nothing
+        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode6)
+        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode7)
+        SmartTreeViewNode5.Tag = Nothing
+        SmartTreeViewNode5.Text = "Accountant"
+        SmartTreeViewNode5.Value = Nothing
+        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode2)
+        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode5)
+        SmartTreeViewNode1.Tag = Nothing
+        SmartTreeViewNode1.Text = "Roles and permissions"
+        SmartTreeViewNode1.Value = Nothing
+        Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode1)
+        Me.SmartTreeView1.ParentNodeBackColor = System.Drawing.Color.Teal
+        Me.SmartTreeView1.SelectionMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewSelectionMode.SingleSelect
+        Me.SmartTreeView1.ShowNodeDividers = True
+        Me.SmartTreeView1.Size = New System.Drawing.Size(160, 250)
+        Me.SmartTreeView1.TabIndex = 4
+        Me.SmartTreeView1.Text = "Roles and permissions"
         '
         'SmartTextBox4
         '
@@ -127,46 +172,6 @@ Partial Class ControlsDemoForm
         Me.SmartTextBox1.SmartType = JsToolBox.Controls.SmartTextBox.SmartInputType.Text
         Me.SmartTextBox1.TabIndex = 0
         Me.SmartTextBox1.TextColor = System.Drawing.Color.Black
-        '
-        'SmartTreeView1
-        '
-        Me.SmartTreeView1.BackColor = System.Drawing.Color.White
-        Me.SmartTreeView1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.SmartTreeView1.ForeColor = System.Drawing.Color.Black
-        Me.SmartTreeView1.Location = New System.Drawing.Point(168, 27)
-        Me.SmartTreeView1.Name = "SmartTreeView1"
-        SmartTreeViewNode1.Expanded = True
-        SmartTreeViewNode3.Tag = Nothing
-        SmartTreeViewNode3.Text = "View Users"
-        SmartTreeViewNode3.Value = Nothing
-        SmartTreeViewNode4.Tag = Nothing
-        SmartTreeViewNode4.Text = "View accounts"
-        SmartTreeViewNode4.Value = Nothing
-        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode3)
-        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode4)
-        SmartTreeViewNode2.Tag = Nothing
-        SmartTreeViewNode2.Text = "Admin"
-        SmartTreeViewNode2.Value = Nothing
-        SmartTreeViewNode6.Tag = Nothing
-        SmartTreeViewNode6.Text = "View acounts"
-        SmartTreeViewNode6.Value = Nothing
-        SmartTreeViewNode7.Tag = Nothing
-        SmartTreeViewNode7.Text = "Create Reports"
-        SmartTreeViewNode7.Value = Nothing
-        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode6)
-        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode7)
-        SmartTreeViewNode5.Tag = Nothing
-        SmartTreeViewNode5.Text = "Accountant"
-        SmartTreeViewNode5.Value = Nothing
-        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode2)
-        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode5)
-        SmartTreeViewNode1.Tag = Nothing
-        SmartTreeViewNode1.Text = "Roles and permissions"
-        SmartTreeViewNode1.Value = Nothing
-        Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode1)
-        Me.SmartTreeView1.Size = New System.Drawing.Size(280, 250)
-        Me.SmartTreeView1.TabIndex = 4
-        Me.SmartTreeView1.Text = "Roles and permissions"
         '
         'ControlsDemoForm
         '
