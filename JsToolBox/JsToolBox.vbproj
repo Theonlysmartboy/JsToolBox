@@ -120,6 +120,7 @@
     <Compile Include="Controls\TreeView\Enums\SmartTreeViewSelectionMode.vb" />
     <Compile Include="Controls\TreeView\Nodes\SmartTreeViewNode.vb" />
     <Compile Include="Controls\TreeView\Nodes\SmartTreeViewNodeCollection.vb" />
+    <Compile Include="Controls\TreeView\SmartTreeViewHitTestInfo.vb" />
     <Compile Include="Loaders\ChasingDotsLoader.vb">
       <SubType>Component</SubType>
     </Compile>

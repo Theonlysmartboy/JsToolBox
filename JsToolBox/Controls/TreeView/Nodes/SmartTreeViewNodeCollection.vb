@@ -1,5 +1,8 @@
-﻿Namespace Controls.TreeView.Nodes
+﻿Imports System.ComponentModel
 
+Namespace Controls.TreeView.Nodes
+
+    <ListBindable(False)>
     Public Class SmartTreeViewNodeCollection
         Inherits List(Of SmartTreeViewNode)
 
@@ -14,8 +17,7 @@
                 Throw New ArgumentException("Node text cannot be empty.", NameOf(text))
             End If
             Dim node As New SmartTreeViewNode(text)
-            node.SetParent(_owner)
-            MyBase.Add(node)
+            AddNode(node)
             Return node
         End Function
 
@@ -23,6 +25,10 @@
             If node Is Nothing Then
                 Throw New ArgumentNullException(NameOf(node))
             End If
+            AddNode(node)
+        End Sub
+
+        Private Sub AddNode(node As SmartTreeViewNode)
             node.SetParent(_owner)
             MyBase.Add(node)
         End Sub
@@ -35,6 +41,10 @@
             node.SetParent(_owner)
             MyBase.Insert(index, node)
             Return node
+        End Function
+
+        Public Overrides Function ToString() As String
+            Return $"Count = {Count}"
         End Function
     End Class
 End Namespace
