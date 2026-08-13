@@ -8,8 +8,7 @@ Namespace Charts
         Public Sub New()
             MyBase.New()
             Me.ChartType = SeriesChartType.Funnel
-
-            Dim s = _chart.Series(0)
+            Dim s = EnsureDefaultSeries()
             s("FunnelStyle") = "YIsValue"
             s("FunnelLabelStyle") = "Outside"
             s.IsValueShownAsLabel = True

@@ -15,9 +15,9 @@ Namespace Charts
             area.AxisY.MajorGrid.Enabled = False
             area.AxisY.Minimum = 0
             area.AxisY.Interval = 10
-
-            _chart.Series(0).IsValueShownAsLabel = True
-            _chart.Series(0).BorderWidth = 2
+            Dim s = EnsureDefaultSeries()
+            s.IsValueShownAsLabel = True
+            s.BorderWidth = 2
         End Sub
 
         Protected Overrides Sub OnTick(sender As Object, e As EventArgs)

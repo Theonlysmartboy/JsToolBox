@@ -8,8 +8,7 @@ Namespace Charts
         Public Sub New()
             MyBase.New()
             Me.ChartType = SeriesChartType.Pyramid
-
-            Dim s = _chart.Series(0)
+            Dim s = EnsureDefaultSeries()
             s("PyramidLabelStyle") = "Outside"
             s.IsValueShownAsLabel = True
         End Sub

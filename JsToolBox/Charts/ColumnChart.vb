@@ -8,11 +8,10 @@ Namespace Charts
         Public Sub New()
             MyBase.New()
             Me.ChartType = SeriesChartType.Column
-            _chart.Series(0).ToolTip = "#VALX: #PERCENT{P2}"
-            _chart.AccessibleDescription = "Column Chart"
-            _chart.AccessibleName = "Column Chart"
-            _chart.Series(0).IsXValueIndexed = True
-            _chart.Series(0).IsValueShownAsLabel = True
+            Dim s = EnsureDefaultSeries()
+            s.ToolTip = "#VALX: #PERCENT{P2}"
+            s.IsXValueIndexed = True
+            s.IsValueShownAsLabel = True
         End Sub
 
         Protected Overrides Sub OnTick(sender As Object, e As EventArgs)
