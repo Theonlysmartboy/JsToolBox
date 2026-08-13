@@ -29,16 +29,25 @@ Partial Class ControlsDemoForm
         Dim SmartTreeViewNode5 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
         Dim SmartTreeViewNode6 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
         Dim SmartTreeViewNode7 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode8 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode9 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode10 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode11 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode12 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode13 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode14 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
         Me.SmartTreeView1 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SmartTextBox4 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox3 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox2 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox1 = New JsToolBox.Controls.SmartTextBox()
+        Me.SmartTreeView2 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SuspendLayout()
         '
         'SmartTreeView1
         '
         Me.SmartTreeView1.BackColor = System.Drawing.Color.White
+        Me.SmartTreeView1.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton
         Me.SmartTreeView1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.SmartTreeView1.ForeColor = System.Drawing.Color.Black
         Me.SmartTreeView1.GrandParentNodeBackColor = System.Drawing.Color.Yellow
@@ -76,9 +85,8 @@ Partial Class ControlsDemoForm
         SmartTreeViewNode1.Value = Nothing
         Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode1)
         Me.SmartTreeView1.ParentNodeBackColor = System.Drawing.Color.Teal
-        Me.SmartTreeView1.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton
         Me.SmartTreeView1.ShowNodeDividers = True
-        Me.SmartTreeView1.Size = New System.Drawing.Size(160, 250)
+        Me.SmartTreeView1.Size = New System.Drawing.Size(200, 157)
         Me.SmartTreeView1.TabIndex = 4
         Me.SmartTreeView1.Text = "Roles and permissions"
         '
@@ -174,11 +182,58 @@ Partial Class ControlsDemoForm
         Me.SmartTextBox1.TabIndex = 0
         Me.SmartTextBox1.TextColor = System.Drawing.Color.Black
         '
+        'SmartTreeView2
+        '
+        Me.SmartTreeView2.BackColor = System.Drawing.Color.White
+        Me.SmartTreeView2.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.None
+        Me.SmartTreeView2.Font = New System.Drawing.Font("Segoe UI", 9.0!)
+        Me.SmartTreeView2.ForeColor = System.Drawing.Color.Black
+        Me.SmartTreeView2.GrandParentNodeBackColor = System.Drawing.Color.Yellow
+        Me.SmartTreeView2.Location = New System.Drawing.Point(179, 256)
+        Me.SmartTreeView2.Name = "SmartTreeView2"
+        Me.SmartTreeView2.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
+        Me.SmartTreeView2.NodeHeight = 25
+        SmartTreeViewNode8.Expanded = True
+        SmartTreeViewNode10.Tag = Nothing
+        SmartTreeViewNode10.Text = "View Users"
+        SmartTreeViewNode10.Value = Nothing
+        SmartTreeViewNode11.Tag = Nothing
+        SmartTreeViewNode11.Text = "View accounts"
+        SmartTreeViewNode11.Value = Nothing
+        SmartTreeViewNode9.Nodes.Add(SmartTreeViewNode10)
+        SmartTreeViewNode9.Nodes.Add(SmartTreeViewNode11)
+        SmartTreeViewNode9.Tag = Nothing
+        SmartTreeViewNode9.Text = "Admin"
+        SmartTreeViewNode9.Value = Nothing
+        SmartTreeViewNode13.Tag = Nothing
+        SmartTreeViewNode13.Text = "View acounts"
+        SmartTreeViewNode13.Value = Nothing
+        SmartTreeViewNode14.Tag = Nothing
+        SmartTreeViewNode14.Text = "Create Reports"
+        SmartTreeViewNode14.Value = Nothing
+        SmartTreeViewNode12.Nodes.Add(SmartTreeViewNode13)
+        SmartTreeViewNode12.Nodes.Add(SmartTreeViewNode14)
+        SmartTreeViewNode12.Tag = Nothing
+        SmartTreeViewNode12.Text = "Accountant"
+        SmartTreeViewNode12.Value = Nothing
+        SmartTreeViewNode8.Nodes.Add(SmartTreeViewNode9)
+        SmartTreeViewNode8.Nodes.Add(SmartTreeViewNode12)
+        SmartTreeViewNode8.Tag = Nothing
+        SmartTreeViewNode8.Text = "Roles and permissions"
+        SmartTreeViewNode8.Value = Nothing
+        Me.SmartTreeView2.Nodes.Add(SmartTreeViewNode8)
+        Me.SmartTreeView2.ParentNodeBackColor = System.Drawing.Color.Teal
+        Me.SmartTreeView2.ShowNodeDividers = True
+        Me.SmartTreeView2.Size = New System.Drawing.Size(200, 157)
+        Me.SmartTreeView2.TabIndex = 5
+        Me.SmartTreeView2.Text = "Roles and permissions"
+        '
         'ControlsDemoForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 450)
+        Me.Controls.Add(Me.SmartTreeView2)
         Me.Controls.Add(Me.SmartTreeView1)
         Me.Controls.Add(Me.SmartTextBox4)
         Me.Controls.Add(Me.SmartTextBox3)
@@ -195,4 +250,5 @@ Partial Class ControlsDemoForm
     Friend WithEvents SmartTextBox3 As JsToolBox.Controls.SmartTextBox
     Friend WithEvents SmartTextBox4 As JsToolBox.Controls.SmartTextBox
     Friend WithEvents SmartTreeView1 As JsToolBox.Controls.TreeView.SmartTreeView
+    Friend WithEvents SmartTreeView2 As JsToolBox.Controls.TreeView.SmartTreeView
 End Class

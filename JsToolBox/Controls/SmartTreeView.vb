@@ -15,6 +15,10 @@ Namespace Controls.TreeView
         Private Const IndentWidth As Integer = 20
         Private Const GlyphSize As Integer = 12
 
+        Private Const IndicatorSize As Integer = 14
+        Private Const IndicatorGap As Integer = 6
+        Private Const TextLeftGap As Integer = 6
+
         Private _checkMode As SmartTreeViewCheckMode = SmartTreeViewCheckMode.CheckBox
 
         Public Sub New()
@@ -39,7 +43,7 @@ Namespace Controls.TreeView
 
         ' Appearance
         <Category("Appearance")>
-        <DefaultValue(SmartTreeViewIndicatorPosition.BeforeText)>
+        <DefaultValue(SmartTreeViewIndicatorPosition.AfterText)>
         Public Property IndicatorPosition As SmartTreeViewIndicatorPosition
 
         <Category("Appearance")>
@@ -116,35 +120,57 @@ Namespace Controls.TreeView
 
         Private Sub DrawNode(graphics As Graphics, node As SmartTreeViewNode, level As Integer, ByRef currentY As Integer)
             Dim x As Integer = level * IndentWidth
-            Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)
-            Dim glyphRect As Rectangle
-            If node.HasChildren Then
-                glyphRect = New Rectangle(x, currentY + 6, GlyphSize, GlyphSize)
-            Else
-                glyphRect = Rectangle.Empty
-            End If
-            ' Store hit-test information.
-            _hitTestItems.Add(New SmartTreeViewHitTestInfo With {
-                    .Node = node,
-                    .GlyphBounds = glyphRect,
-                    .NodeBounds = nodeBounds,
-                    .Level = level
-                })
-            ' Determine hierarchy background
+            Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)            ' Hierarchy background
             Dim backgroundColor As Color = GetNodeBackgroundColor(node)
             If backgroundColor <> Color.Empty Then
                 Using backgroundBrush As New SolidBrush(backgroundColor)
                     graphics.FillRectangle(backgroundBrush, nodeBounds)
                 End Using
             End If
-            ' Expand / collapse glyph
+            ' Expand / Collapse glyph
+            ' This ALWAYS remains before the text.
+            Dim glyphRect As Rectangle = Rectangle.Empty
+            If node.HasChildren Then
+                glyphRect = New Rectangle(x, currentY + (NodeHeight - GlyphSize) \ 2, GlyphSize, GlyphSize)
+            End If
+            ' Determine text position
+            Dim textStartX As Integer = x + GlyphSize + TextLeftGap
+            Dim textY As Integer = currentY + (NodeHeight - Font.Height) \ 2
+            ' Measure text
+            Dim textSize As SizeF = graphics.MeasureString(node.Text, Font)
+            Dim textBounds As New Rectangle(textStartX, currentY, CInt(Math.Ceiling(textSize.Width)), NodeHeight)
+            ' Indicator
+            Dim indicatorBounds As Rectangle = Rectangle.Empty
+            If CheckMode <> SmartTreeViewCheckMode.None Then
+                Dim indicatorY As Integer = currentY + (NodeHeight - IndicatorSize) \ 2
+                If IndicatorPosition = SmartTreeViewIndicatorPosition.BeforeText Then
+                    indicatorBounds = New Rectangle(textStartX, indicatorY, IndicatorSize, IndicatorSize)
+                    textStartX = indicatorBounds.Right + IndicatorGap
+                    textBounds = New Rectangle(textStartX, currentY, CInt(Math.Ceiling(textSize.Width)), NodeHeight)
+                Else
+                    indicatorBounds = New Rectangle(textBounds.Right + IndicatorGap, indicatorY, IndicatorSize, IndicatorSize)
+                End If
+            End If
+            ' Store hit-test information
+            _hitTestItems.Add(New SmartTreeViewHitTestInfo With {
+                .Node = node,
+                .GlyphBounds = glyphRect,
+                .IndicatorBounds = indicatorBounds,
+                .TextBounds = textBounds,
+                .NodeBounds = nodeBounds,
+                .Level = level
+            })
+            ' Draw expand/collapse glyph
             DrawExpandGlyph(graphics, node, x, currentY)
-            ' Node text
-            Dim textX As Integer = x + GlyphSize + 6
+            ' Draw node text
             Dim textColor As Color = If(node.Enabled, ForeColor, Color.Gray)
             Using textBrush As New SolidBrush(textColor)
-                graphics.DrawString(node.Text, Font, textBrush, textX, currentY + 3)
+                graphics.DrawString(node.Text, Font, textBrush, textStartX, textY)
             End Using
+            ' Draw checkbox / radio button
+            If CheckMode <> SmartTreeViewCheckMode.None Then
+                DrawIndicator(graphics, node, indicatorBounds)
+            End If
             ' Divider
             If ShowNodeDividers Then
                 Dim dividerColor As Color = If(NodeDividerColor = Color.Empty, Color.LightGray, NodeDividerColor)
@@ -202,6 +228,78 @@ Namespace Controls.TreeView
             End Using
         End Sub
 
+        Private Sub DrawIndicator(graphics As Graphics, node As SmartTreeViewNode, bounds As Rectangle)
+            If bounds = Rectangle.Empty Then
+                Return
+            End If
+            Dim borderColor As Color
+            Dim fillColor As Color
+            If node.Enabled Then
+                borderColor = Color.Gray
+                fillColor = Color.White
+            Else
+                borderColor = Color.LightGray
+                fillColor = Color.Gainsboro
+            End If
+            Select Case CheckMode
+                Case SmartTreeViewCheckMode.CheckBox
+                    DrawCheckBoxIndicator(graphics, node, bounds, borderColor, fillColor)
+                Case SmartTreeViewCheckMode.RadioButton
+                    DrawRadioButtonIndicator(graphics, node, bounds, borderColor, fillColor)
+            End Select
+        End Sub
+
+        Private Sub DrawCheckBoxIndicator(graphics As Graphics, node As SmartTreeViewNode,
+                                          bounds As Rectangle, borderColor As Color, fillColor As Color)
+            Using fillBrush As New SolidBrush(fillColor)
+                graphics.FillRectangle(fillBrush, bounds)
+            End Using
+            Using borderPen As New Pen(borderColor, 1)
+                graphics.DrawRectangle(borderPen, bounds)
+            End Using
+            If Not node.Checked Then
+                Return
+            End If
+            Dim checkColor As Color = If(node.Enabled, Color.Black, Color.Gray)
+            Using checkPen As New Pen(checkColor, 2)
+                checkPen.StartCap = Drawing2D.LineCap.Round
+                checkPen.EndCap = Drawing2D.LineCap.Round
+                checkPen.LineJoin = Drawing2D.LineJoin.Round
+                Dim x1 As Integer = bounds.Left + 3
+                Dim y1 As Integer = bounds.Top + bounds.Height \ 2
+                Dim x2 As Integer = bounds.Left + bounds.Width \ 2 - 1
+                Dim y2 As Integer = bounds.Bottom - 4
+                Dim x3 As Integer = bounds.Right - 3
+                Dim y3 As Integer = bounds.Top + 3
+                graphics.DrawLines(checkPen, {
+                    New Point(x1, y1),
+                    New Point(x2, y2),
+                    New Point(x3, y3)
+                })
+            End Using
+        End Sub
+
+        Private Sub DrawRadioButtonIndicator(graphics As Graphics, node As SmartTreeViewNode,
+                                             bounds As Rectangle, borderColor As Color, fillColor As Color)
+            Using fillBrush As New SolidBrush(fillColor)
+                graphics.FillEllipse(fillBrush, bounds)
+            End Using
+            Using borderPen As New Pen(borderColor, 1)
+                graphics.DrawEllipse(borderPen, bounds)
+            End Using
+            If Not node.Checked Then
+                Return
+            End If
+            Dim innerSize As Integer = Math.Max(4, bounds.Width - 7)
+            Dim innerX As Integer = bounds.Left + (bounds.Width - innerSize) \ 2
+            Dim innerY As Integer = bounds.Top + (bounds.Height - innerSize) \ 2
+            Dim innerBounds As New Rectangle(innerX, innerY, innerSize, innerSize)
+            Dim fillColorInner As Color = If(node.Enabled, Color.Black, Color.Gray)
+            Using innerBrush As New SolidBrush(fillColorInner)
+                graphics.FillEllipse(innerBrush, innerBounds)
+            End Using
+        End Sub
+
         ' Mouse Interaction
         Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
             MyBase.OnMouseDown(e)
@@ -210,6 +308,7 @@ Namespace Controls.TreeView
             End If
             For Each item As SmartTreeViewHitTestInfo In _hitTestItems
                 ' Expand / Collapse
+                ' The expand/collapse glyph always has priority.
                 If item.GlyphBounds.Contains(e.Location) Then
                     If item.Node.HasChildren AndAlso item.Node.Enabled Then
                         item.Node.Expanded = Not item.Node.Expanded
@@ -217,14 +316,19 @@ Namespace Controls.TreeView
                     End If
                     Return
                 End If
-                ' Node area
-                ' Indicators will get their own hit-test area
-                ' in the next rendering step.
-                If item.NodeBounds.Contains(e.Location) Then
+                ' Checkbox / Radio Button
+                ' This changes Checked only without changing Selected.
+                If CheckMode <> SmartTreeViewCheckMode.None AndAlso item.IndicatorBounds.Contains(e.Location) Then
                     If item.Node.Enabled Then
-                        ' For now, because indicators have not yet
-                        ' been rendered, clicking the node row is
-                        ' treated as node selection.
+                        CheckNode(item.Node)
+                    End If
+                    Return
+                End If
+                ' Node text
+                ' This changes Selected only.
+                ' It does NOT change Checked.
+                If item.TextBounds.Contains(e.Location) Then
+                    If item.Node.Enabled Then
                         SelectNode(item.Node)
                     End If
                     Return
@@ -240,9 +344,7 @@ Namespace Controls.TreeView
             If Not node.Enabled Then
                 Return
             End If
-            ' Clear the previous node selection.
             ClearSelectedNodes()
-            ' Select this node.
             node.Selected = True
             Invalidate()
         End Sub
