@@ -41,6 +41,7 @@ Partial Class ControlsDemoForm
         Me.SmartTreeView1.BackColor = System.Drawing.Color.White
         Me.SmartTreeView1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.SmartTreeView1.ForeColor = System.Drawing.Color.Black
+        Me.SmartTreeView1.GrandParentNodeBackColor = System.Drawing.Color.Yellow
         Me.SmartTreeView1.Location = New System.Drawing.Point(168, 27)
         Me.SmartTreeView1.Name = "SmartTreeView1"
         Me.SmartTreeView1.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
@@ -75,7 +76,7 @@ Partial Class ControlsDemoForm
         SmartTreeViewNode1.Value = Nothing
         Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode1)
         Me.SmartTreeView1.ParentNodeBackColor = System.Drawing.Color.Teal
-        Me.SmartTreeView1.SelectionMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewSelectionMode.SingleSelect
+        Me.SmartTreeView1.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton
         Me.SmartTreeView1.ShowNodeDividers = True
         Me.SmartTreeView1.Size = New System.Drawing.Size(160, 250)
         Me.SmartTreeView1.TabIndex = 4
