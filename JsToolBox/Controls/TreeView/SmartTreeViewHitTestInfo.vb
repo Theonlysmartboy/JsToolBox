@@ -1,3 +1,11 @@
-﻿Public Class SmartTreeViewHitTestInfo
+﻿Imports System.Drawing
 
-End Class
+Namespace Controls.TreeView
+
+    Friend Class SmartTreeViewHitTestInfo
+        Public Property Node As Nodes.SmartTreeViewNode
+        Public Property GlyphBounds As Rectangle
+        Public Property NodeBounds As Rectangle
+        Public Property Level As Integer
+    End Class
+End Namespace

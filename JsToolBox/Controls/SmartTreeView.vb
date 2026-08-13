@@ -9,6 +9,7 @@ Namespace Controls.TreeView
         Inherits Control
 
         Private ReadOnly _nodes As SmartTreeViewNodeCollection
+        Private ReadOnly _hitTestItems As New List(Of SmartTreeViewHitTestInfo)
         Private Const NodeHeight As Integer = 24
         Private Const IndentWidth As Integer = 20
         Private Const GlyphSize As Integer = 12
@@ -36,6 +37,7 @@ Namespace Controls.TreeView
 
         Protected Overrides Sub OnPaint(e As PaintEventArgs)
             MyBase.OnPaint(e)
+            _hitTestItems.Clear()
             Dim currentY As Integer = 0
             For Each node As SmartTreeViewNode In _nodes
                 DrawNode(e.Graphics, node, 0, currentY)
@@ -44,14 +46,25 @@ Namespace Controls.TreeView
 
         Private Sub DrawNode(graphics As Graphics, node As SmartTreeViewNode, level As Integer, ByRef currentY As Integer)
             Dim x As Integer = level * IndentWidth
-            ' Draw expand/collapse indicator
+            Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)
+            Dim glyphRect As Rectangle
+            If node.HasChildren Then
+                glyphRect = New Rectangle(x, currentY + 6, GlyphSize, GlyphSize)
+            Else
+                glyphRect = Rectangle.Empty
+            End If
+            _hitTestItems.Add(New SmartTreeViewHitTestInfo With {
+                .Node = node,
+                .GlyphBounds = glyphRect,
+                .NodeBounds = nodeBounds,
+                .Level = level
+            })
             DrawExpandGlyph(graphics, node, x, currentY)
             Dim textX As Integer = x + GlyphSize + 6
-            Using textBrush As New SolidBrush(ForeColor)
+            Using textBrush As New SolidBrush(If(node.Enabled, ForeColor, Color.Gray))
                 graphics.DrawString(node.Text, Font, textBrush, textX, currentY + 3)
             End Using
             currentY += NodeHeight
-            ' Draw children only when expanded
             If node.Expanded AndAlso node.HasChildren Then
                 For Each child As SmartTreeViewNode In node.Nodes
                     DrawNode(graphics, child, level + 1, currentY)
@@ -75,6 +88,22 @@ Namespace Controls.TreeView
                     graphics.DrawLine(pen, centerX, glyphRect.Top + 3, centerX, glyphRect.Bottom - 3)
                 End If
             End Using
+        End Sub
+
+        Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
+            MyBase.OnMouseDown(e)
+            If e.Button <> MouseButtons.Left Then
+                Return
+            End If
+            For Each item In _hitTestItems
+                If item.GlyphBounds.Contains(e.Location) Then
+                    If item.Node.HasChildren AndAlso item.Node.Enabled Then
+                        item.Node.Expanded = Not item.Node.Expanded
+                        Invalidate()
+                    End If
+                    Return
+                End If
+            Next
         End Sub
     End Class
 End Namespace
