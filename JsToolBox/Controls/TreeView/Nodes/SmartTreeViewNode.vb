@@ -20,12 +20,15 @@ Namespace Controls.TreeView.Nodes
         Public Sub New(text As String)
             Me.New()
             If String.IsNullOrWhiteSpace(text) Then
-                Throw New ArgumentException(
-                    "Node text cannot be empty.",
-                    NameOf(text))
+                Throw New ArgumentException("Node text cannot be empty.", NameOf(text))
             End If
             Me.Text = text
         End Sub
+
+        ' Basic Data
+        <Category("Appearance")>
+        <DefaultValue("")>
+        Public Property Text As String
 
         ' Identity
         <Category("Data")>
@@ -38,12 +41,7 @@ Namespace Controls.TreeView.Nodes
         <Category("Data")>
         Public Property Tag As Object
 
-        ' Appearance
-        <Category("Appearance")>
-        <DefaultValue("")>
-        Public Property Text As String
-
-        ' Behavior
+        ' State
         <Category("Behavior")>
         <DefaultValue(False)>
         Public Property Checked As Boolean
@@ -70,52 +68,15 @@ Namespace Controls.TreeView.Nodes
         End Property
 
         <Browsable(False)>
-        Public ReadOnly Property HasParent As Boolean
-            Get
-                Return _parent IsNot Nothing
-            End Get
-        End Property
-
-        <Category("Nodes")>
-        <DesignerSerializationVisibility(DesignerSerializationVisibility.Content)>
-        Public ReadOnly Property Nodes As SmartTreeViewNodeCollection
-            Get
-                Return _nodes
-            End Get
-        End Property
-
-        <Browsable(False)>
-        Public ReadOnly Property HasChildren As Boolean
-            Get
-                Return _nodes.Count > 0
-            End Get
-        End Property
-
-        ' Position
-        <Browsable(False)>
-        Public ReadOnly Property Index As Integer
+        Public ReadOnly Property GrandParent As SmartTreeViewNode
             Get
                 If _parent Is Nothing Then
-                    Return -1
+                    Return Nothing
                 End If
-                Return _parent.Nodes.IndexOf(Me)
+                Return _parent.Parent
             End Get
         End Property
 
-        <Browsable(False)>
-        Public ReadOnly Property Level As Integer
-            Get
-                Dim nodeLevel As Integer = 0
-                Dim current As SmartTreeViewNode = _parent
-                While current IsNot Nothing
-                    nodeLevel += 1
-                    current = current.Parent
-                End While
-                Return nodeLevel
-            End Get
-        End Property
-
-        ' Root
         <Browsable(False)>
         Public ReadOnly Property Root As SmartTreeViewNode
             Get
@@ -127,21 +88,87 @@ Namespace Controls.TreeView.Nodes
             End Get
         End Property
 
-        ' Path
         <Browsable(False)>
-        Public ReadOnly Property Path As String
+        Public ReadOnly Property Level As Integer
             Get
-                Dim parts As New List(Of String)
+                Dim nodeLevel As Integer = 0
                 Dim current As SmartTreeViewNode = Me
-                While current IsNot Nothing
-                    parts.Insert(0, current.Text)
+                While current.Parent IsNot Nothing
+                    nodeLevel += 1
                     current = current.Parent
                 End While
-                Return String.Join(" > ", parts)
+                Return nodeLevel
             End Get
         End Property
 
-        ' Internal
+        <Browsable(False)>
+        Public ReadOnly Property Index As Integer
+            Get
+                If _parent Is Nothing Then
+                    Return -1
+                End If
+                Return _parent.Nodes.IndexOf(Me)
+            End Get
+        End Property
+
+        <Browsable(False)>
+        Public ReadOnly Property IsRoot As Boolean
+            Get
+                Return _parent Is Nothing
+            End Get
+        End Property
+
+        <Browsable(False)>
+        Public ReadOnly Property IsLeaf As Boolean
+            Get
+                Return _nodes.Count = 0
+            End Get
+        End Property
+
+        <Browsable(False)>
+        Public ReadOnly Property HasChildren As Boolean
+            Get
+                Return _nodes.Count > 0
+            End Get
+        End Property
+
+        ' Nodes
+        <Category("Nodes")>
+        <DesignerSerializationVisibility(DesignerSerializationVisibility.Content)>
+        Public ReadOnly Property Nodes As SmartTreeViewNodeCollection
+            Get
+                Return _nodes
+            End Get
+        End Property
+
+        ' Ancestors
+        <Browsable(False)>
+        Public ReadOnly Property Ancestors As List(Of SmartTreeViewNode)
+            Get
+                Dim result As New List(Of SmartTreeViewNode)
+                Dim current As SmartTreeViewNode = Parent
+                While current IsNot Nothing
+                    result.Add(current)
+                    current = current.Parent
+                End While
+                Return result
+            End Get
+        End Property
+
+        ' Descendants
+        <Browsable(False)>
+        Public ReadOnly Property Descendants As List(Of SmartTreeViewNode)
+            Get
+                Dim result As New List(Of SmartTreeViewNode)
+                For Each child As SmartTreeViewNode In Nodes
+                    result.Add(child)
+                    result.AddRange(child.Descendants)
+                Next
+                Return result
+            End Get
+        End Property
+
+        ' Parent Assignment
         Friend Sub SetParent(parent As SmartTreeViewNode)
             _parent = parent
         End Sub

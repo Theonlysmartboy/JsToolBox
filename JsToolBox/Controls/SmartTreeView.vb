@@ -741,6 +741,23 @@ Namespace Controls.TreeView
             Return Nothing
         End Function
 
+        'Find by tag
+        Public Function FindByTag(tag As Object) As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n)
+                                           Return Object.Equals(n.Tag, tag)
+                                       End Function).ToList()
+        End Function
+
+        'Find by text
+        Public Function FindByText(text As String) As SmartTreeViewNode
+            If String.IsNullOrWhiteSpace(text) Then
+                Return Nothing
+            End If
+            Return GetAllNodes().FirstOrDefault(Function(n)
+                                                    Return String.Equals(n.Text, text, StringComparison.OrdinalIgnoreCase)
+                                                End Function)
+        End Function
+
         'Get checked nodes
         Public Function GetCheckedNodes() As List(Of SmartTreeViewNode)
             Dim result As New List(Of SmartTreeViewNode)
@@ -750,6 +767,32 @@ Namespace Controls.TreeView
                 End If
             Next
             Return result
+        End Function
+
+        Public Function GetUncheckedNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) Not n.Checked).ToList()
+        End Function
+
+        Public Function GetEnabledNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) n.Enabled).ToList()
+        End Function
+
+        Public Function GetDisabledNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) Not n.Enabled).ToList()
+        End Function
+
+        Public Function GetSelectedNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) n.Selected).ToList()
+        End Function
+
+        Public Function GetGrandParentNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n)
+                                           Return n.Nodes.Any(Function(child) child.HasChildren)
+                                       End Function).ToList()
+        End Function
+
+        Public Function GetLeafNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) n.IsLeaf).ToList()
         End Function
 
         'Get all nodes in the tree, including descendants
@@ -769,6 +812,49 @@ Namespace Controls.TreeView
                     Yield descendant
                 Next
             Next
+        End Function
+
+        'Enable and disable nodes
+        Public Sub EnableNode(node As SmartTreeViewNode)
+            If node Is Nothing Then
+                Return
+            End If
+            node.Enabled = True
+            Invalidate()
+        End Sub
+
+        Public Sub DisableNode(node As SmartTreeViewNode)
+            If node Is Nothing Then
+                Return
+            End If
+            node.Enabled = False
+            Invalidate()
+        End Sub
+
+        Public Sub SetNodeEnabled(node As SmartTreeViewNode, enabled As Boolean, includeChildren As Boolean)
+            If node Is Nothing Then
+                Return
+            End If
+            node.Enabled = enabled
+            If includeChildren Then
+                For Each child As SmartTreeViewNode In node.Nodes
+                    SetNodeEnabled(child, enabled, True)
+                Next
+            End If
+            Invalidate()
+        End Sub
+
+        Public Function GetNodesByLevel(level As Integer) As List(Of SmartTreeViewNode)
+            If level < 0 Then
+                Return New List(Of SmartTreeViewNode)
+            End If
+            Return GetAllNodes().Where(Function(n) n.Level = level).ToList()
+        End Function
+
+        Public Function GetCheckedLeafNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n)
+                                           Return n.Checked AndAlso n.IsLeaf
+                                       End Function).ToList()
         End Function
     End Class
 End Namespace
