@@ -11,7 +11,6 @@ Public Class LoaderDemoForm
         Me.Text = "JsToolBox Loaders Demo"
         Me.Size = New Size(900, 700)
         Me.StartPosition = FormStartPosition.CenterScreen
-
         ' Scrollable FlowLayoutPanel
         flow = New FlowLayoutPanel() With {
             .Dock = DockStyle.Fill,
@@ -22,7 +21,6 @@ Public Class LoaderDemoForm
             .BackColor = Color.WhiteSmoke
         }
         Me.Controls.Add(flow)
-
         AddLoaderDemo("Circular Loader", New CircularLoader() With {.LoaderColor = Color.DodgerBlue, .Text = "Loading"})
         AddLoaderDemo("Trailing Dots Loader", New TrailingDotsLoader() With {.LoaderColor = Color.MediumSeaGreen})
         AddLoaderDemo("Pulse Loader", New PulseLoader() With {.LoaderColor = Color.OrangeRed})
@@ -33,7 +31,6 @@ Public Class LoaderDemoForm
         AddLoaderDemo("Equalizer Bars Loader", New EqualizerBarsLoader() With {.LoaderColor = Color.DarkOrange, .Style = EqualizerBarsLoader.EqualizerStyle.Wave})
         AddLoaderDemo("Ripple Loader", New RippleLoader() With {.LoaderColor = Color.MediumTurquoise})
         AddLoaderDemo("Facebook Shimmer Loader", New FacebookShimmerLoader() With {.LoaderColor = Color.Gray, .Size = New Size(250, 60)})
-
     End Sub
 
     Private Sub AddLoaderDemo(title As String, loader As LoaderBase)
@@ -42,17 +39,17 @@ Public Class LoaderDemoForm
         If loader.Height < 40 Then loader.Height = 60
         ' Container panel
         Dim panel As New Panel() With {
-        .Size = New Size(flow.ClientSize.Width - 40, Math.Max(120, loader.Height + 50)),
-        .BorderStyle = BorderStyle.FixedSingle,
-        .Padding = New Padding(10)
-    }
+            .Size = New Size(flow.ClientSize.Width - 40, Math.Max(120, loader.Height + 50)),
+            .BorderStyle = BorderStyle.FixedSingle,
+            .Padding = New Padding(10)
+        }
         ' Title label
         Dim lbl As New Label() With {
-        .Text = title,
-        .Font = New Font("Segoe UI", 10, FontStyle.Bold),
-        .Dock = DockStyle.Top,
-        .Height = 25
-    }
+            .Text = title,
+            .Font = New Font("Segoe UI", 10, FontStyle.Bold),
+            .Dock = DockStyle.Top,
+            .Height = 25
+        }
         panel.Controls.Add(lbl)
         ' Loader location
         loader.Location = New Point(10, lbl.Bottom + 5)

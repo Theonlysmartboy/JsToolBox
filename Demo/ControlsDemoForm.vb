@@ -1,25 +1,58 @@
 ﻿Imports JsToolBox.Controls.TreeView
+Imports JsToolBox.Controls.TreeView.Enums
 
 Public Class ControlsDemoForm
 
     Private Sub ControlsDemoForm_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         Dim tree As New SmartTreeView()
+        tree.CheckMode = SmartTreeViewCheckMode.CheckBox
+        tree.IndicatorPosition = SmartTreeViewIndicatorPosition.AfterText
+        tree.ParentNodeBackColor = Color.AliceBlue
+        tree.GrandParentNodeBackColor = Color.LightYellow
+        tree.ShowNodeDividers = True
         Dim customers = tree.Nodes.Add("Customers")
-        customers.Expanded = True
         Dim retail = customers.Nodes.Add("Retail Customers")
-        retail.Expanded = True
         retail.Nodes.Add("Customer A")
         retail.Nodes.Add("Customer B")
+        retail.Nodes.Add("Customer C")
+        retail.Nodes.Add("Customer D")
+        retail.Nodes.Add("Customer E")
+        retail.Nodes.Add("Customer F")
+        retail.Nodes.Add("Customer G")
+        retail.Nodes.Add("Customer H")
+        retail.Nodes.Add("Customer I")
+        retail.Nodes.Add("Customer J")
+        retail.Nodes.Add("Customer K")
+        retail.Nodes.Add("Customer L")
+        retail.Nodes.Add("Customer M")
+        retail.Nodes.Add("Customer N")
+        retail.Nodes.Add("Customer O")
+        retail.Nodes.Add("Customer P")
+
         Dim wholesale = customers.Nodes.Add("Wholesale Customers")
         wholesale.Nodes.Add("Customer C")
         Dim suppliers = tree.Nodes.Add("Suppliers")
-        suppliers.Nodes.Add("Local Suppliers")
+        Dim localSuppliers = suppliers.Nodes.Add("Local Suppliers")
+        localSuppliers.Nodes.Add("Supplier A")
+        localSuppliers.Nodes.Add("Supplier B")
+        localSuppliers.Nodes.Add("Supplier C")
+        localSuppliers.Nodes.Add("Supplier D")
+        localSuppliers.Nodes.Add("Supplier E")
+        localSuppliers.Nodes.Add("Supplier F")
+        localSuppliers.Nodes.Add("Supplier G")
+        localSuppliers.Nodes.Add("Supplier H")
+        localSuppliers.Nodes.Add("Supplier I")
+        localSuppliers.Nodes.Add("Supplier J")
+        localSuppliers.Nodes.Add("Supplier K")
+        localSuppliers.Nodes.Add("Supplier L")
+        localSuppliers.Nodes.Add("Supplier M")
+        localSuppliers.Nodes.Add("Supplier N")
         suppliers.Nodes.Add("International Suppliers")
-        Dim customerA = retail.Nodes(0)
-        'Debug.WriteLine(customerA.Text)
-        'Debug.WriteLine(customerA.Parent.Text)
-        'Debug.WriteLine(customerA.Parent.Parent.Text)
-        tree.Location = New Point(610, 100)
+        customers.Expanded = True
+        retail.Expanded = True
+        wholesale.Expanded = True
+        suppliers.Expanded = True
+        tree.Location = New Point(413, 28)
         tree.Size = New Size(350, 300)
         Controls.Add(tree)
     End Sub

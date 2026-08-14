@@ -13,6 +13,7 @@ Namespace Controls.TreeView.Nodes
             Me.Enabled = True
             Me.Expanded = False
             Me.Checked = False
+            Me.Selected = False
             _nodes = New SmartTreeViewNodeCollection(Me)
         End Sub
 
@@ -37,6 +38,10 @@ Namespace Controls.TreeView.Nodes
         <Category("Behavior")>
         <DefaultValue(False)>
         Public Property Checked As Boolean
+
+        <Category("Behavior")>
+        <DefaultValue(False)>
+        Public Property Selected As Boolean
 
         <Category("Behavior")>
         <DefaultValue(False)>
