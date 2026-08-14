@@ -116,6 +116,7 @@
     <Compile Include="Controls\SmartTreeView.vb">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Controls\TreeView\Enums\SmartTreeViewCheckState.vb" />
     <Compile Include="Controls\TreeView\Enums\SmartTreeViewIndicatorPosition.vb" />
     <Compile Include="Controls\TreeView\Enums\SmartTreeViewCheckMode.vb" />
     <Compile Include="Controls\TreeView\Nodes\SmartTreeViewNode.vb" />

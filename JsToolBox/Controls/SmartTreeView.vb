@@ -29,7 +29,7 @@ Namespace Controls.TreeView
             Me.Size = New Size(300, 250)
             Me.TabStop = True
             Me.NodeHeight = 24
-            Me.IndicatorSize = 12
+            Me.IndicatorSize = 10
             Me.IndicatorGap = 6
             Me.TextLeftGap = 6
             IndicatorPosition = SmartTreeViewIndicatorPosition.AfterText
@@ -65,7 +65,7 @@ Namespace Controls.TreeView
         Public Property NodeHeight As Integer
 
         <Category("Appearance")>
-        <DefaultValue(14)>
+        <DefaultValue(10)>
         Public Property IndicatorSize As Integer
 
         <Category("Appearance")>
@@ -130,8 +130,9 @@ Namespace Controls.TreeView
 
         Private Sub DrawNode(graphics As Graphics, node As SmartTreeViewNode, level As Integer, ByRef currentY As Integer)
             Dim x As Integer = level * IndentWidth
-            Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)            ' Hierarchy background
-            Dim backgroundColor As Color = GetNodeBackgroundColor(node)
+            Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)
+            ' Hierarchy background
+            Dim backgroundColor As Color = GetNodeBackgroundColor(node, level)
             If backgroundColor <> Color.Empty Then
                 Using backgroundBrush As New SolidBrush(backgroundColor)
                     graphics.FillRectangle(backgroundBrush, nodeBounds)
@@ -198,24 +199,17 @@ Namespace Controls.TreeView
         End Sub
 
         ' Hierarchy background
-        Private Function GetNodeBackgroundColor(node As SmartTreeViewNode) As Color
-            If Not node.HasChildren Then
-                Return Color.Empty
-            End If
-            ' A grandparent is a node that has at least one
-            ' child which itself has children.
-            For Each child As SmartTreeViewNode In node.Nodes
-                If child.HasChildren Then
+        Private Function GetNodeBackgroundColor(node As SmartTreeViewNode, level As Integer) As Color
+            Select Case level
+                Case 0
                     If GrandParentNodeBackColor <> Color.Empty Then
                         Return GrandParentNodeBackColor
                     End If
-                    Exit For
-                End If
-            Next
-            ' Otherwise this is a normal parent.
-            If ParentNodeBackColor <> Color.Empty Then
-                Return ParentNodeBackColor
-            End If
+                Case 1
+                    If ParentNodeBackColor <> Color.Empty Then
+                        Return ParentNodeBackColor
+                    End If
+            End Select
             Return Color.Empty
         End Function
 
@@ -259,35 +253,79 @@ Namespace Controls.TreeView
             End Select
         End Sub
 
-        Private Sub DrawCheckBoxIndicator(graphics As Graphics, node As SmartTreeViewNode,
-                                          bounds As Rectangle, borderColor As Color, fillColor As Color)
+        Private Sub DrawCheckBoxIndicator(graphics As Graphics, node As SmartTreeViewNode, bounds As Rectangle,
+                                          borderColor As Color, fillColor As Color)
             Using fillBrush As New SolidBrush(fillColor)
                 graphics.FillRectangle(fillBrush, bounds)
             End Using
             Using borderPen As New Pen(borderColor, 1)
                 graphics.DrawRectangle(borderPen, bounds)
             End Using
-            If Not node.Checked Then
-                Return
-            End If
-            Dim checkColor As Color = If(node.Enabled, Color.Black, Color.Gray)
-            Using checkPen As New Pen(checkColor, 2)
-                checkPen.StartCap = LineCap.Round
-                checkPen.EndCap = LineCap.Round
-                checkPen.LineJoin = LineJoin.Round
-                Dim x1 As Integer = bounds.Left + 3
-                Dim y1 As Integer = bounds.Top + bounds.Height \ 2
-                Dim x2 As Integer = bounds.Left + bounds.Width \ 2 - 1
-                Dim y2 As Integer = bounds.Bottom - 4
-                Dim x3 As Integer = bounds.Right - 3
-                Dim y3 As Integer = bounds.Top + 3
-                graphics.DrawLines(checkPen, {
-                    New Point(x1, y1),
-                    New Point(x2, y2),
-                    New Point(x3, y3)
-                })
-            End Using
+            Dim state As SmartTreeViewCheckState = GetCheckState(node)
+            Select Case state
+                Case SmartTreeViewCheckState.Checked
+                    Dim checkColor As Color = If(node.Enabled, Color.Black, Color.Gray)
+                    Using checkPen As New Pen(checkColor, 2)
+                        checkPen.StartCap = LineCap.Round
+                        checkPen.EndCap = LineCap.Round
+                        checkPen.LineJoin = LineJoin.Round
+                        Dim x1 As Integer = bounds.Left + 3
+                        Dim y1 As Integer = bounds.Top + bounds.Height \ 2
+                        Dim x2 As Integer = bounds.Left + bounds.Width \ 2 - 1
+                        Dim y2 As Integer = bounds.Bottom - 4
+                        Dim x3 As Integer = bounds.Right - 3
+                        Dim y3 As Integer = bounds.Top + 3
+                        graphics.DrawLines(checkPen, {
+                            New Point(x1, y1),
+                            New Point(x2, y2),
+                            New Point(x3, y3)
+                        })
+                    End Using
+                Case SmartTreeViewCheckState.Partial
+                    Dim partialColor As Color = If(node.Enabled, Color.Black, Color.Gray)
+                    Dim padding As Integer = 3
+                    Dim partialBounds As New Rectangle(bounds.Left + padding,
+                                                bounds.Top + bounds.Height \ 2 - 1,
+                                                bounds.Width - padding * 2, 2)
+                    Using partialBrush As New SolidBrush(partialColor)
+                        graphics.FillRectangle(partialBrush, partialBounds)
+                    End Using
+            End Select
         End Sub
+
+        Private Function GetCheckState(node As SmartTreeViewNode) As SmartTreeViewCheckState
+            If node Is Nothing Then
+                Return SmartTreeViewCheckState.Unchecked
+            End If
+            ' Leaf node
+            If Not node.HasChildren Then
+                If node.Checked Then
+                    Return SmartTreeViewCheckState.Checked
+                End If
+                Return SmartTreeViewCheckState.Unchecked
+            End If
+            Dim checkedCount As Integer = 0
+            Dim partialFound As Boolean = False
+            For Each child As SmartTreeViewNode In node.Nodes
+                Dim childState As SmartTreeViewCheckState = GetCheckState(child)
+                Select Case childState
+                    Case SmartTreeViewCheckState.Checked
+                        checkedCount += 1
+                    Case SmartTreeViewCheckState.Partial
+                        partialFound = True
+                End Select
+            Next
+            ' Everything underneath this node is checked.
+            If checkedCount = node.Nodes.Count AndAlso Not partialFound Then
+                Return SmartTreeViewCheckState.Checked
+            End If
+            ' Nothing underneath this node is checked.
+            If checkedCount = 0 AndAlso Not partialFound Then
+                Return SmartTreeViewCheckState.Unchecked
+            End If
+            ' Some descendants are checked.
+            Return SmartTreeViewCheckState.Partial
+        End Function
 
         Private Sub DrawRadioButtonIndicator(graphics As Graphics, node As SmartTreeViewNode,
                                              bounds As Rectangle, borderColor As Color, fillColor As Color)
@@ -370,13 +408,45 @@ Namespace Controls.TreeView
                 Case SmartTreeViewCheckMode.None
                     Return
                 Case SmartTreeViewCheckMode.CheckBox
-                    node.Checked = Not node.Checked
-                    ApplyCheckStateToChildren(node, node.Checked)
+                    Dim newCheckedState As Boolean = Not node.Checked
+                    node.Checked = newCheckedState
+                    ' Parent/root checked state propagates downward.
+                    ApplyCheckStateToChildren(node, newCheckedState)
+                    ' Recalculate ancestors.
+                    UpdateParentCheckStates(node.Parent)
                 Case SmartTreeViewCheckMode.RadioButton
                     ClearAllCheckedNodes()
                     node.Checked = True
             End Select
             Invalidate()
+        End Sub
+
+        Private Sub UpdateParentCheckStates(parent As SmartTreeViewNode)
+            If parent Is Nothing Then
+                Return
+            End If
+            Dim allChecked As Boolean = True
+            Dim anyChecked As Boolean = False
+            For Each child As SmartTreeViewNode In parent.Nodes
+                Dim childState As SmartTreeViewCheckState = GetCheckState(child)
+                If childState <> SmartTreeViewCheckState.Checked Then
+                    allChecked = False
+                End If
+                If childState <> SmartTreeViewCheckState.Unchecked Then
+                    anyChecked = True
+                End If
+            Next
+            If allChecked Then
+                parent.Checked = True
+            ElseIf Not anyChecked Then
+                parent.Checked = False
+            Else
+                ' The parent itself remains unchecked because
+                ' Partial is an effective visual state.
+                parent.Checked = False
+            End If
+            ' Continue toward the root.
+            UpdateParentCheckStates(parent.Parent)
         End Sub
 
         Private Sub ClearSelectedNodes()
