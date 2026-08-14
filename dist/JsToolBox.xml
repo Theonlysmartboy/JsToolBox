@@ -1,0 +1,59 @@
+﻿<?xml version="1.0"?>
+<doc>
+<assembly>
+<name>
+JsToolBox
+</name>
+</assembly>
+<members>
+<member name="T:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode">
+ <summary>
+ Determines whether the SmartTreeView displays
+ checkbox or radio-button indicators.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.None">
+ <summary>
+ No checkbox or radio-button indicator is displayed.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.CheckBox">
+ <summary>
+ Display checkbox indicators.
+ Multiple nodes may be checked.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton">
+ <summary>
+ Display radio-button indicators.
+ Only one node may be checked at a time.
+ </summary>
+</member>
+<member name="T:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckState">
+ <summary>
+ Represents the effective checkbox state of a tree node.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckState.Unchecked">
+ <summary>
+ The node and all of its descendants are unchecked.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckState.Partial">
+ <summary>
+ The node and/or its descendants are partially checked.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckState.Checked">
+ <summary>
+ The node and all of its descendants are checked.
+ </summary>
+</member>
+<member name="T:JsToolBox.Controls.TreeView.Enums.SmartTreeViewIndicatorPosition">
+ <summary>
+ Determines the position of the checkbox or radio button
+ relative to the node text.
+ </summary>
+</member>
+</members>
+</doc>
