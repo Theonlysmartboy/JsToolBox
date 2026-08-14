@@ -21,6 +21,7 @@ Namespace Controls.TreeView
         Private _initializing As Boolean = True
         Private _selectedNodeBackColor As Color = Color.FromArgb(51, 153, 255)
         Private _selectedNodeForeColor As Color = Color.White
+        Public Event NodeSelected As EventHandler(Of SmartTreeViewNodeEventArgs)
 
         Public Sub New()
             _nodes = New SmartTreeViewNodeCollection(Nothing)
@@ -520,6 +521,7 @@ Namespace Controls.TreeView
             node.Selected = True
             EnsureNodeVisible(node)
             Invalidate()
+            RaiseEvent NodeSelected(Me, New SmartTreeViewNodeEventArgs(node))
         End Sub
 
         Private Sub EnsureNodeVisible(node As SmartTreeViewNode)
@@ -856,5 +858,15 @@ Namespace Controls.TreeView
                                            Return n.Checked AndAlso n.IsLeaf
                                        End Function).ToList()
         End Function
+
+        Public Class SmartTreeViewNodeEventArgs
+            Inherits EventArgs
+
+            Public ReadOnly Property Node As SmartTreeViewNode
+
+            Public Sub New(node As SmartTreeViewNode)
+                Me.Node = node
+            End Sub
+        End Class
     End Class
 End Namespace

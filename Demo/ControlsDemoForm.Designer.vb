@@ -22,122 +22,27 @@ Partial Class ControlsDemoForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim SmartTreeViewNode1 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode2 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode3 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode4 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode5 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode6 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode7 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode8 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode9 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode10 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode11 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode12 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode13 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode14 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Me.SmartTreeView2 = New JsToolBox.Controls.TreeView.SmartTreeView()
-        Me.SmartTreeView1 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SmartTextBox4 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox3 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox2 = New JsToolBox.Controls.SmartTextBox()
         Me.SmartTextBox1 = New JsToolBox.Controls.SmartTextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.Label2 = New System.Windows.Forms.Label()
         Me.Label3 = New System.Windows.Forms.Label()
+        Me.txtTestOutput = New System.Windows.Forms.TextBox()
+        Me.btnTestLeaves = New System.Windows.Forms.Button()
+        Me.btnTestLevels = New System.Windows.Forms.Button()
+        Me.btnTestCheckedLeaves = New System.Windows.Forms.Button()
+        Me.btnTestSelected = New System.Windows.Forms.Button()
+        Me.btnTestDisabled = New System.Windows.Forms.Button()
+        Me.btnTestEnabled = New System.Windows.Forms.Button()
+        Me.btnTestUnchecked = New System.Windows.Forms.Button()
+        Me.btnTestChecked = New System.Windows.Forms.Button()
+        Me.btnTestFindByText = New System.Windows.Forms.Button()
+        Me.btnTestFindById = New System.Windows.Forms.Button()
+        Me.btnEnableChildren = New System.Windows.Forms.Button()
+        Me.btnDisableChildren = New System.Windows.Forms.Button()
+        Me.btnEnableRetail = New System.Windows.Forms.Button()
+        Me.btnDisableRetail = New System.Windows.Forms.Button()
         Me.SuspendLayout()
-        '
-        'SmartTreeView2
-        '
-        Me.SmartTreeView2.BackColor = System.Drawing.Color.White
-        Me.SmartTreeView2.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.None
-        Me.SmartTreeView2.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.SmartTreeView2.ForeColor = System.Drawing.Color.Black
-        Me.SmartTreeView2.GrandParentNodeBackColor = System.Drawing.Color.Yellow
-        Me.SmartTreeView2.Location = New System.Drawing.Point(182, 316)
-        Me.SmartTreeView2.Name = "SmartTreeView2"
-        Me.SmartTreeView2.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.SmartTreeView2.NodeHeight = 25
-        SmartTreeViewNode1.Expanded = True
-        SmartTreeViewNode3.Tag = Nothing
-        SmartTreeViewNode3.Text = "View Users"
-        SmartTreeViewNode3.Value = Nothing
-        SmartTreeViewNode4.Tag = Nothing
-        SmartTreeViewNode4.Text = "View accounts"
-        SmartTreeViewNode4.Value = Nothing
-        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode3)
-        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode4)
-        SmartTreeViewNode2.Tag = Nothing
-        SmartTreeViewNode2.Text = "Admin"
-        SmartTreeViewNode2.Value = Nothing
-        SmartTreeViewNode6.Tag = Nothing
-        SmartTreeViewNode6.Text = "View acounts"
-        SmartTreeViewNode6.Value = Nothing
-        SmartTreeViewNode7.Tag = Nothing
-        SmartTreeViewNode7.Text = "Create Reports"
-        SmartTreeViewNode7.Value = Nothing
-        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode6)
-        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode7)
-        SmartTreeViewNode5.Tag = Nothing
-        SmartTreeViewNode5.Text = "Accountant"
-        SmartTreeViewNode5.Value = Nothing
-        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode2)
-        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode5)
-        SmartTreeViewNode1.Tag = Nothing
-        SmartTreeViewNode1.Text = "Roles and permissions"
-        SmartTreeViewNode1.Value = Nothing
-        Me.SmartTreeView2.Nodes.Add(SmartTreeViewNode1)
-        Me.SmartTreeView2.ParentNodeBackColor = System.Drawing.Color.Teal
-        Me.SmartTreeView2.ShowNodeDividers = True
-        Me.SmartTreeView2.Size = New System.Drawing.Size(200, 220)
-        Me.SmartTreeView2.TabIndex = 5
-        Me.SmartTreeView2.Text = "Roles and permissions"
-        '
-        'SmartTreeView1
-        '
-        Me.SmartTreeView1.BackColor = System.Drawing.Color.White
-        Me.SmartTreeView1.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton
-        Me.SmartTreeView1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
-        Me.SmartTreeView1.ForeColor = System.Drawing.Color.Black
-        Me.SmartTreeView1.GrandParentNodeBackColor = System.Drawing.Color.LightYellow
-        Me.SmartTreeView1.Location = New System.Drawing.Point(182, 28)
-        Me.SmartTreeView1.Name = "SmartTreeView1"
-        Me.SmartTreeView1.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
-        Me.SmartTreeView1.NodeHeight = 25
-        SmartTreeViewNode8.Expanded = True
-        SmartTreeViewNode10.Tag = Nothing
-        SmartTreeViewNode10.Text = "View Users"
-        SmartTreeViewNode10.Value = Nothing
-        SmartTreeViewNode11.Tag = Nothing
-        SmartTreeViewNode11.Text = "View accounts"
-        SmartTreeViewNode11.Value = Nothing
-        SmartTreeViewNode9.Nodes.Add(SmartTreeViewNode10)
-        SmartTreeViewNode9.Nodes.Add(SmartTreeViewNode11)
-        SmartTreeViewNode9.Tag = Nothing
-        SmartTreeViewNode9.Text = "Admin"
-        SmartTreeViewNode9.Value = Nothing
-        SmartTreeViewNode13.Tag = Nothing
-        SmartTreeViewNode13.Text = "View acounts"
-        SmartTreeViewNode13.Value = Nothing
-        SmartTreeViewNode14.Tag = Nothing
-        SmartTreeViewNode14.Text = "Create Reports"
-        SmartTreeViewNode14.Value = Nothing
-        SmartTreeViewNode12.Nodes.Add(SmartTreeViewNode13)
-        SmartTreeViewNode12.Nodes.Add(SmartTreeViewNode14)
-        SmartTreeViewNode12.Tag = Nothing
-        SmartTreeViewNode12.Text = "Accountant"
-        SmartTreeViewNode12.Value = Nothing
-        SmartTreeViewNode8.Nodes.Add(SmartTreeViewNode9)
-        SmartTreeViewNode8.Nodes.Add(SmartTreeViewNode12)
-        SmartTreeViewNode8.Tag = Nothing
-        SmartTreeViewNode8.Text = "Roles and permissions"
-        SmartTreeViewNode8.Value = Nothing
-        Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode8)
-        Me.SmartTreeView1.ParentNodeBackColor = System.Drawing.Color.LightBlue
-        Me.SmartTreeView1.ShowNodeDividers = True
-        Me.SmartTreeView1.Size = New System.Drawing.Size(200, 220)
-        Me.SmartTreeView1.TabIndex = 4
-        Me.SmartTreeView1.Text = "Roles and permissions"
         '
         'SmartTextBox4
         '
@@ -231,43 +136,170 @@ Partial Class ControlsDemoForm
         Me.SmartTextBox1.TabIndex = 0
         Me.SmartTextBox1.TextColor = System.Drawing.Color.Black
         '
-        'Label1
-        '
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(179, 294)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(158, 13)
-        Me.Label1.TabIndex = 6
-        Me.Label1.Text = "Designer added no checkboxes"
-        '
-        'Label2
-        '
-        Me.Label2.AutoSize = True
-        Me.Label2.Location = New System.Drawing.Point(179, 12)
-        Me.Label2.Name = "Label2"
-        Me.Label2.Size = New System.Drawing.Size(168, 13)
-        Me.Label2.TabIndex = 7
-        Me.Label2.Text = "Designer added with Radio button"
-        '
         'Label3
         '
         Me.Label3.AutoSize = True
-        Me.Label3.Location = New System.Drawing.Point(476, 12)
+        Me.Label3.Location = New System.Drawing.Point(532, 12)
         Me.Label3.Name = "Label3"
         Me.Label3.Size = New System.Drawing.Size(199, 13)
         Me.Label3.TabIndex = 8
         Me.Label3.Text = "Programatically added with Check Boxes"
+        '
+        'txtTestOutput
+        '
+        Me.txtTestOutput.Location = New System.Drawing.Point(12, 262)
+        Me.txtTestOutput.Multiline = True
+        Me.txtTestOutput.Name = "txtTestOutput"
+        Me.txtTestOutput.Size = New System.Drawing.Size(382, 287)
+        Me.txtTestOutput.TabIndex = 9
+        '
+        'btnTestLeaves
+        '
+        Me.btnTestLeaves.Location = New System.Drawing.Point(284, 111)
+        Me.btnTestLeaves.Name = "btnTestLeaves"
+        Me.btnTestLeaves.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestLeaves.TabIndex = 11
+        Me.btnTestLeaves.Text = "Leaves"
+        Me.btnTestLeaves.UseVisualStyleBackColor = True
+        '
+        'btnTestLevels
+        '
+        Me.btnTestLevels.Location = New System.Drawing.Point(284, 147)
+        Me.btnTestLevels.Name = "btnTestLevels"
+        Me.btnTestLevels.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestLevels.TabIndex = 12
+        Me.btnTestLevels.Text = "Levels"
+        Me.btnTestLevels.UseVisualStyleBackColor = True
+        '
+        'btnTestCheckedLeaves
+        '
+        Me.btnTestCheckedLeaves.Location = New System.Drawing.Point(168, 146)
+        Me.btnTestCheckedLeaves.Name = "btnTestCheckedLeaves"
+        Me.btnTestCheckedLeaves.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestCheckedLeaves.TabIndex = 13
+        Me.btnTestCheckedLeaves.Text = "Checked Leaves"
+        Me.btnTestCheckedLeaves.UseVisualStyleBackColor = True
+        '
+        'btnTestSelected
+        '
+        Me.btnTestSelected.Location = New System.Drawing.Point(168, 111)
+        Me.btnTestSelected.Name = "btnTestSelected"
+        Me.btnTestSelected.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestSelected.TabIndex = 14
+        Me.btnTestSelected.Text = "Selected"
+        Me.btnTestSelected.UseVisualStyleBackColor = True
+        '
+        'btnTestDisabled
+        '
+        Me.btnTestDisabled.Location = New System.Drawing.Point(284, 75)
+        Me.btnTestDisabled.Name = "btnTestDisabled"
+        Me.btnTestDisabled.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestDisabled.TabIndex = 15
+        Me.btnTestDisabled.Text = "Disabled"
+        Me.btnTestDisabled.UseVisualStyleBackColor = True
+        '
+        'btnTestEnabled
+        '
+        Me.btnTestEnabled.Location = New System.Drawing.Point(168, 75)
+        Me.btnTestEnabled.Name = "btnTestEnabled"
+        Me.btnTestEnabled.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestEnabled.TabIndex = 16
+        Me.btnTestEnabled.Text = "Enabled"
+        Me.btnTestEnabled.UseVisualStyleBackColor = True
+        '
+        'btnTestUnchecked
+        '
+        Me.btnTestUnchecked.Location = New System.Drawing.Point(284, 39)
+        Me.btnTestUnchecked.Name = "btnTestUnchecked"
+        Me.btnTestUnchecked.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestUnchecked.TabIndex = 17
+        Me.btnTestUnchecked.Text = "Unchecked"
+        Me.btnTestUnchecked.UseVisualStyleBackColor = True
+        '
+        'btnTestChecked
+        '
+        Me.btnTestChecked.Location = New System.Drawing.Point(168, 39)
+        Me.btnTestChecked.Name = "btnTestChecked"
+        Me.btnTestChecked.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestChecked.TabIndex = 18
+        Me.btnTestChecked.Text = "Checked"
+        Me.btnTestChecked.UseVisualStyleBackColor = True
+        '
+        'btnTestFindByText
+        '
+        Me.btnTestFindByText.Location = New System.Drawing.Point(284, 3)
+        Me.btnTestFindByText.Name = "btnTestFindByText"
+        Me.btnTestFindByText.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestFindByText.TabIndex = 19
+        Me.btnTestFindByText.Text = "Find By Text"
+        Me.btnTestFindByText.UseVisualStyleBackColor = True
+        '
+        'btnTestFindById
+        '
+        Me.btnTestFindById.Location = New System.Drawing.Point(168, 3)
+        Me.btnTestFindById.Name = "btnTestFindById"
+        Me.btnTestFindById.Size = New System.Drawing.Size(110, 30)
+        Me.btnTestFindById.TabIndex = 20
+        Me.btnTestFindById.Text = "Find By Id"
+        Me.btnTestFindById.UseVisualStyleBackColor = True
+        '
+        'btnEnableChildren
+        '
+        Me.btnEnableChildren.Location = New System.Drawing.Point(284, 219)
+        Me.btnEnableChildren.Name = "btnEnableChildren"
+        Me.btnEnableChildren.Size = New System.Drawing.Size(110, 30)
+        Me.btnEnableChildren.TabIndex = 21
+        Me.btnEnableChildren.Text = "Enable Children"
+        Me.btnEnableChildren.UseVisualStyleBackColor = True
+        '
+        'btnDisableChildren
+        '
+        Me.btnDisableChildren.Location = New System.Drawing.Point(168, 218)
+        Me.btnDisableChildren.Name = "btnDisableChildren"
+        Me.btnDisableChildren.Size = New System.Drawing.Size(110, 30)
+        Me.btnDisableChildren.TabIndex = 22
+        Me.btnDisableChildren.Text = "Disable Children"
+        Me.btnDisableChildren.UseVisualStyleBackColor = True
+        '
+        'btnEnableRetail
+        '
+        Me.btnEnableRetail.Location = New System.Drawing.Point(284, 183)
+        Me.btnEnableRetail.Name = "btnEnableRetail"
+        Me.btnEnableRetail.Size = New System.Drawing.Size(110, 30)
+        Me.btnEnableRetail.TabIndex = 23
+        Me.btnEnableRetail.Text = "Enable Retail"
+        Me.btnEnableRetail.UseVisualStyleBackColor = True
+        '
+        'btnDisableRetail
+        '
+        Me.btnDisableRetail.Location = New System.Drawing.Point(168, 182)
+        Me.btnDisableRetail.Name = "btnDisableRetail"
+        Me.btnDisableRetail.Size = New System.Drawing.Size(110, 30)
+        Me.btnDisableRetail.TabIndex = 24
+        Me.btnDisableRetail.Text = "Disable Retail"
+        Me.btnDisableRetail.UseVisualStyleBackColor = True
         '
         'ControlsDemoForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(800, 551)
+        Me.Controls.Add(Me.btnDisableRetail)
+        Me.Controls.Add(Me.btnEnableRetail)
+        Me.Controls.Add(Me.btnDisableChildren)
+        Me.Controls.Add(Me.btnEnableChildren)
+        Me.Controls.Add(Me.btnTestFindById)
+        Me.Controls.Add(Me.btnTestFindByText)
+        Me.Controls.Add(Me.btnTestChecked)
+        Me.Controls.Add(Me.btnTestUnchecked)
+        Me.Controls.Add(Me.btnTestEnabled)
+        Me.Controls.Add(Me.btnTestDisabled)
+        Me.Controls.Add(Me.btnTestSelected)
+        Me.Controls.Add(Me.btnTestCheckedLeaves)
+        Me.Controls.Add(Me.btnTestLevels)
+        Me.Controls.Add(Me.btnTestLeaves)
+        Me.Controls.Add(Me.txtTestOutput)
         Me.Controls.Add(Me.Label3)
-        Me.Controls.Add(Me.Label2)
-        Me.Controls.Add(Me.Label1)
-        Me.Controls.Add(Me.SmartTreeView2)
-        Me.Controls.Add(Me.SmartTreeView1)
         Me.Controls.Add(Me.SmartTextBox4)
         Me.Controls.Add(Me.SmartTextBox3)
         Me.Controls.Add(Me.SmartTextBox2)
@@ -283,9 +315,20 @@ Partial Class ControlsDemoForm
     Friend WithEvents SmartTextBox2 As JsToolBox.Controls.SmartTextBox
     Friend WithEvents SmartTextBox3 As JsToolBox.Controls.SmartTextBox
     Friend WithEvents SmartTextBox4 As JsToolBox.Controls.SmartTextBox
-    Friend WithEvents SmartTreeView1 As JsToolBox.Controls.TreeView.SmartTreeView
-    Friend WithEvents SmartTreeView2 As JsToolBox.Controls.TreeView.SmartTreeView
-    Friend WithEvents Label1 As Label
-    Friend WithEvents Label2 As Label
     Friend WithEvents Label3 As Label
+    Friend WithEvents txtTestOutput As TextBox
+    Friend WithEvents btnTestLeaves As Button
+    Friend WithEvents btnTestLevels As Button
+    Friend WithEvents btnTestCheckedLeaves As Button
+    Friend WithEvents btnTestSelected As Button
+    Friend WithEvents btnTestDisabled As Button
+    Friend WithEvents btnTestEnabled As Button
+    Friend WithEvents btnTestUnchecked As Button
+    Friend WithEvents btnTestChecked As Button
+    Friend WithEvents btnTestFindByText As Button
+    Friend WithEvents btnTestFindById As Button
+    Friend WithEvents btnEnableChildren As Button
+    Friend WithEvents btnDisableChildren As Button
+    Friend WithEvents btnEnableRetail As Button
+    Friend WithEvents btnDisableRetail As Button
 End Class
