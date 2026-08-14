@@ -28,6 +28,27 @@ Namespace Controls.TreeView.Nodes
             AddNode(node)
         End Sub
 
+        Public Shadows Function Add(id As Object, text As String) As SmartTreeViewNode
+            If String.IsNullOrWhiteSpace(text) Then
+                Throw New ArgumentException("Node text cannot be empty.", NameOf(text))
+            End If
+            Dim node As New SmartTreeViewNode(text)
+            node.Id = id
+            AddNode(node)
+            Return node
+        End Function
+
+        Public Shadows Function Add(id As Object, text As String, value As Object) As SmartTreeViewNode
+            If String.IsNullOrWhiteSpace(text) Then
+                Throw New ArgumentException("Node text cannot be empty.", NameOf(text))
+            End If
+            Dim node As New SmartTreeViewNode(text)
+            node.Id = id
+            node.Value = value
+            AddNode(node)
+            Return node
+        End Function
+
         Private Sub AddNode(node As SmartTreeViewNode)
             node.SetParent(_owner)
             MyBase.Add(node)

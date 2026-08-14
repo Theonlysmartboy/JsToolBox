@@ -21,6 +21,7 @@ Namespace Controls.TreeView
         Private _initializing As Boolean = True
         Private _selectedNodeBackColor As Color = Color.FromArgb(51, 153, 255)
         Private _selectedNodeForeColor As Color = Color.White
+        Public Event NodeSelected As EventHandler(Of SmartTreeViewNodeEventArgs)
 
         Public Sub New()
             _nodes = New SmartTreeViewNodeCollection(Nothing)
@@ -520,6 +521,7 @@ Namespace Controls.TreeView
             node.Selected = True
             EnsureNodeVisible(node)
             Invalidate()
+            RaiseEvent NodeSelected(Me, New SmartTreeViewNodeEventArgs(node))
         End Sub
 
         Private Sub EnsureNodeVisible(node As SmartTreeViewNode)
@@ -682,5 +684,189 @@ Namespace Controls.TreeView
             UpdateScrollBar()
             Invalidate()
         End Sub
+
+        ' Node lookup
+        'Finding by Id
+        Public Function FindNodeById(id As Object) As SmartTreeViewNode
+            If id Is Nothing Then
+                Return Nothing
+            End If
+            For Each node As SmartTreeViewNode In _nodes
+                Dim result As SmartTreeViewNode = FindNodeByIdRecursive(node, id)
+                If result IsNot Nothing Then
+                    Return result
+                End If
+            Next
+            Return Nothing
+        End Function
+
+        Private Function FindNodeByIdRecursive(node As SmartTreeViewNode, id As Object) As SmartTreeViewNode
+            If node Is Nothing Then
+                Return Nothing
+            End If
+            If node.Id IsNot Nothing AndAlso Object.Equals(node.Id, id) Then
+                Return node
+            End If
+            For Each child As SmartTreeViewNode In node.Nodes
+                Dim result As SmartTreeViewNode = FindNodeByIdRecursive(child, id)
+                If result IsNot Nothing Then
+                    Return result
+                End If
+            Next
+            Return Nothing
+        End Function
+
+        'Finding by value
+        Public Function FindNodeByValue(value As Object) As SmartTreeViewNode
+            For Each node As SmartTreeViewNode In _nodes
+                Dim result As SmartTreeViewNode = FindNodeByValueRecursive(node, value)
+                If result IsNot Nothing Then
+                    Return result
+                End If
+            Next
+            Return Nothing
+        End Function
+
+        Private Function FindNodeByValueRecursive(node As SmartTreeViewNode, value As Object) As SmartTreeViewNode
+            If node Is Nothing Then
+                Return Nothing
+            End If
+            If Object.Equals(node.Value, value) Then
+                Return node
+            End If
+            For Each child As SmartTreeViewNode In node.Nodes
+                Dim result As SmartTreeViewNode = FindNodeByValueRecursive(child, value)
+                If result IsNot Nothing Then
+                    Return result
+                End If
+            Next
+            Return Nothing
+        End Function
+
+        'Find by tag
+        Public Function FindByTag(tag As Object) As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n)
+                                           Return Object.Equals(n.Tag, tag)
+                                       End Function).ToList()
+        End Function
+
+        'Find by text
+        Public Function FindByText(text As String) As SmartTreeViewNode
+            If String.IsNullOrWhiteSpace(text) Then
+                Return Nothing
+            End If
+            Return GetAllNodes().FirstOrDefault(Function(n)
+                                                    Return String.Equals(n.Text, text, StringComparison.OrdinalIgnoreCase)
+                                                End Function)
+        End Function
+
+        'Get checked nodes
+        Public Function GetCheckedNodes() As List(Of SmartTreeViewNode)
+            Dim result As New List(Of SmartTreeViewNode)
+            For Each node As SmartTreeViewNode In GetAllNodes()
+                If node.Checked Then
+                    result.Add(node)
+                End If
+            Next
+            Return result
+        End Function
+
+        Public Function GetUncheckedNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) Not n.Checked).ToList()
+        End Function
+
+        Public Function GetEnabledNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) n.Enabled).ToList()
+        End Function
+
+        Public Function GetDisabledNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) Not n.Enabled).ToList()
+        End Function
+
+        Public Function GetSelectedNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) n.Selected).ToList()
+        End Function
+
+        Public Function GetGrandParentNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n)
+                                           Return n.Nodes.Any(Function(child) child.HasChildren)
+                                       End Function).ToList()
+        End Function
+
+        Public Function GetLeafNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n) n.IsLeaf).ToList()
+        End Function
+
+        'Get all nodes in the tree, including descendants
+        Public Iterator Function GetAllNodes() As IEnumerable(Of SmartTreeViewNode)
+            For Each node As SmartTreeViewNode In _nodes
+                Yield node
+                For Each descendant As SmartTreeViewNode In GetDescendants(node)
+                    Yield descendant
+                Next
+            Next
+        End Function
+
+        Private Iterator Function GetDescendants(node As SmartTreeViewNode) As IEnumerable(Of SmartTreeViewNode)
+            For Each child As SmartTreeViewNode In node.Nodes
+                Yield child
+                For Each descendant As SmartTreeViewNode In GetDescendants(child)
+                    Yield descendant
+                Next
+            Next
+        End Function
+
+        'Enable and disable nodes
+        Public Sub EnableNode(node As SmartTreeViewNode)
+            If node Is Nothing Then
+                Return
+            End If
+            node.Enabled = True
+            Invalidate()
+        End Sub
+
+        Public Sub DisableNode(node As SmartTreeViewNode)
+            If node Is Nothing Then
+                Return
+            End If
+            node.Enabled = False
+            Invalidate()
+        End Sub
+
+        Public Sub SetNodeEnabled(node As SmartTreeViewNode, enabled As Boolean, includeChildren As Boolean)
+            If node Is Nothing Then
+                Return
+            End If
+            node.Enabled = enabled
+            If includeChildren Then
+                For Each child As SmartTreeViewNode In node.Nodes
+                    SetNodeEnabled(child, enabled, True)
+                Next
+            End If
+            Invalidate()
+        End Sub
+
+        Public Function GetNodesByLevel(level As Integer) As List(Of SmartTreeViewNode)
+            If level < 0 Then
+                Return New List(Of SmartTreeViewNode)
+            End If
+            Return GetAllNodes().Where(Function(n) n.Level = level).ToList()
+        End Function
+
+        Public Function GetCheckedLeafNodes() As List(Of SmartTreeViewNode)
+            Return GetAllNodes().Where(Function(n)
+                                           Return n.Checked AndAlso n.IsLeaf
+                                       End Function).ToList()
+        End Function
+
+        Public Class SmartTreeViewNodeEventArgs
+            Inherits EventArgs
+
+            Public ReadOnly Property Node As SmartTreeViewNode
+
+            Public Sub New(node As SmartTreeViewNode)
+                Me.Node = node
+            End Sub
+        End Class
     End Class
 End Namespace
