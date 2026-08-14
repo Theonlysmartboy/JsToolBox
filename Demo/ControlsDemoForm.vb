@@ -17,13 +17,14 @@ Public Class ControlsDemoForm
         Dim wholesale = customers.Nodes.Add("Wholesale Customers")
         wholesale.Nodes.Add("Customer C")
         Dim suppliers = tree.Nodes.Add("Suppliers")
-        suppliers.Nodes.Add("Local Suppliers")
+        Dim localSuppliers = suppliers.Nodes.Add("Local Suppliers")
+        localSuppliers.Nodes.Add("Supplier A")
         suppliers.Nodes.Add("International Suppliers")
         customers.Expanded = True
         retail.Expanded = True
         wholesale.Expanded = True
         suppliers.Expanded = True
-        tree.Location = New Point(610, 100)
+        tree.Location = New Point(413, 28)
         tree.Size = New Size(350, 300)
         Controls.Add(tree)
     End Sub

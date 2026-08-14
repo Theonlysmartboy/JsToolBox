@@ -1,5 +1,6 @@
 ﻿Imports System.ComponentModel
 Imports System.Drawing
+Imports System.Drawing.Drawing2D
 Imports System.Windows.Forms
 Imports JsToolBox.Controls.TreeView.Enums
 Imports JsToolBox.Controls.TreeView.Nodes
@@ -11,14 +12,8 @@ Namespace Controls.TreeView
 
         Private ReadOnly _nodes As SmartTreeViewNodeCollection
         Private ReadOnly _hitTestItems As New List(Of SmartTreeViewHitTestInfo)
-
         Private Const IndentWidth As Integer = 20
         Private Const GlyphSize As Integer = 12
-
-        Private Const IndicatorSize As Integer = 14
-        Private Const IndicatorGap As Integer = 6
-        Private Const TextLeftGap As Integer = 6
-
         Private _checkMode As SmartTreeViewCheckMode = SmartTreeViewCheckMode.CheckBox
 
         Public Sub New()
@@ -34,6 +29,9 @@ Namespace Controls.TreeView
             Me.Size = New Size(300, 250)
             Me.TabStop = True
             Me.NodeHeight = 24
+            Me.IndicatorSize = 12
+            Me.IndicatorGap = 6
+            Me.TextLeftGap = 6
             IndicatorPosition = SmartTreeViewIndicatorPosition.AfterText
             ParentNodeBackColor = Color.Empty
             GrandParentNodeBackColor = Color.Empty
@@ -55,6 +53,10 @@ Namespace Controls.TreeView
         Public Property GrandParentNodeBackColor As Color
 
         <Category("Appearance")>
+        <DefaultValue(GetType(Color), "")>
+        Public Property NodeDividerColor As Color
+
+        <Category("Appearance")>
         <DefaultValue(False)>
         Public Property ShowNodeDividers As Boolean
 
@@ -63,8 +65,16 @@ Namespace Controls.TreeView
         Public Property NodeHeight As Integer
 
         <Category("Appearance")>
-        <DefaultValue(GetType(Color), "")>
-        Public Property NodeDividerColor As Color
+        <DefaultValue(14)>
+        Public Property IndicatorSize As Integer
+
+        <Category("Appearance")>
+        <DefaultValue(6)>
+        Public Property IndicatorGap As Integer
+
+        <Category("Appearance")>
+        <DefaultValue(6)>
+        Public Property TextLeftGap As Integer
 
         ' Behavior
         <Category("Behavior")>
@@ -262,9 +272,9 @@ Namespace Controls.TreeView
             End If
             Dim checkColor As Color = If(node.Enabled, Color.Black, Color.Gray)
             Using checkPen As New Pen(checkColor, 2)
-                checkPen.StartCap = Drawing2D.LineCap.Round
-                checkPen.EndCap = Drawing2D.LineCap.Round
-                checkPen.LineJoin = Drawing2D.LineJoin.Round
+                checkPen.StartCap = LineCap.Round
+                checkPen.EndCap = LineCap.Round
+                checkPen.LineJoin = LineJoin.Round
                 Dim x1 As Integer = bounds.Left + 3
                 Dim y1 As Integer = bounds.Top + bounds.Height \ 2
                 Dim x2 As Integer = bounds.Left + bounds.Width \ 2 - 1
