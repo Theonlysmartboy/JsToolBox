@@ -1,0 +1,33 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <OutputType>Library</OutputType>
+    <RootNamespace>JsToolBox</RootNamespace>
+    <AssemblyName>JsToolBox</AssemblyName>
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <Deterministic>true</Deterministic>
+    <Optimize>true</Optimize>
+    <DebugType>pdbonly</DebugType>
+    <DocumentationFile>JsToolBox.xml</DocumentationFile>
+    <Description>JsToolBox - SmartTreeView control library</Description>
+    <Company></Company>
+    <Authors></Authors>
+    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+  </ItemGroup>
+  <ItemGroup>
+    <!-- Include only SmartTreeView related source files from the existing project -->
+    <Compile Include="..\JsToolBox\Controls\SmartTreeView.vb" />
+    <Compile Include="..\JsToolBox\Controls\TreeView\SmartTreeViewHitTestInfo.vb" />
+    <Compile Include="..\JsToolBox\Controls\TreeView\Enums\SmartTreeViewCheckMode.vb" />
+    <Compile Include="..\JsToolBox\Controls\TreeView\Enums\SmartTreeViewCheckState.vb" />
+    <Compile Include="..\JsToolBox\Controls\TreeView\Enums\SmartTreeViewIndicatorPosition.vb" />
+    <Compile Include="..\JsToolBox\Controls\TreeView\Nodes\SmartTreeViewNode.vb" />
+    <Compile Include="..\JsToolBox\Controls\TreeView\Nodes\SmartTreeViewNodeCollection.vb" />
+    <Compile Include="..\JsToolBox\My Project\AssemblyInfo.vb" />
+  </ItemGroup>
+</Project>
