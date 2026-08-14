@@ -11,8 +11,14 @@ Public Class ControlsDemoForm
         tree.GrandParentNodeBackColor = Color.LightYellow
         tree.ShowNodeDividers = True
         Dim customers = tree.Nodes.Add("Customers")
+        customers.Id = 1
+        customers.Value = "CUSTOMERS"
         Dim retail = customers.Nodes.Add("Retail Customers")
-        retail.Nodes.Add("Customer A")
+        retail.Id = 10
+        retail.Value = "RETAIL"
+        Dim customerA = retail.Nodes.Add("Customer A")
+        customerA.Id = 101
+        customerA.Value = "Customer A"
         retail.Nodes.Add("Customer B")
         retail.Nodes.Add("Customer C")
         retail.Nodes.Add("Customer D")
@@ -30,7 +36,7 @@ Public Class ControlsDemoForm
         retail.Nodes.Add("Customer P")
 
         Dim wholesale = customers.Nodes.Add("Wholesale Customers")
-        wholesale.Nodes.Add("Customer C")
+        wholesale.Nodes.Add("Customer Q")
         Dim suppliers = tree.Nodes.Add("Suppliers")
         Dim localSuppliers = suppliers.Nodes.Add("Local Suppliers")
         localSuppliers.Nodes.Add("Supplier A")
