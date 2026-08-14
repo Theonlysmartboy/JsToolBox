@@ -22,20 +22,20 @@ Partial Class ControlsDemoForm
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Dim SmartTreeViewNode15 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode16 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode17 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode18 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode19 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode20 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode21 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode22 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode23 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode24 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode25 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode26 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode27 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
-        Dim SmartTreeViewNode28 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode1 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode2 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode3 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode4 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode5 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode6 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode7 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode8 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode9 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode10 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode11 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode12 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode13 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
+        Dim SmartTreeViewNode14 As JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode = New JsToolBox.Controls.TreeView.Nodes.SmartTreeViewNode()
         Me.SmartTreeView2 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SmartTreeView1 = New JsToolBox.Controls.TreeView.SmartTreeView()
         Me.SmartTextBox4 = New JsToolBox.Controls.SmartTextBox()
@@ -54,40 +54,39 @@ Partial Class ControlsDemoForm
         Me.SmartTreeView2.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.SmartTreeView2.ForeColor = System.Drawing.Color.Black
         Me.SmartTreeView2.GrandParentNodeBackColor = System.Drawing.Color.Yellow
-        Me.SmartTreeView2.IndicatorSize = 10
         Me.SmartTreeView2.Location = New System.Drawing.Point(182, 316)
         Me.SmartTreeView2.Name = "SmartTreeView2"
         Me.SmartTreeView2.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SmartTreeView2.NodeHeight = 25
-        SmartTreeViewNode15.Expanded = True
-        SmartTreeViewNode17.Tag = Nothing
-        SmartTreeViewNode17.Text = "View Users"
-        SmartTreeViewNode17.Value = Nothing
-        SmartTreeViewNode18.Tag = Nothing
-        SmartTreeViewNode18.Text = "View accounts"
-        SmartTreeViewNode18.Value = Nothing
-        SmartTreeViewNode16.Nodes.Add(SmartTreeViewNode17)
-        SmartTreeViewNode16.Nodes.Add(SmartTreeViewNode18)
-        SmartTreeViewNode16.Tag = Nothing
-        SmartTreeViewNode16.Text = "Admin"
-        SmartTreeViewNode16.Value = Nothing
-        SmartTreeViewNode20.Tag = Nothing
-        SmartTreeViewNode20.Text = "View acounts"
-        SmartTreeViewNode20.Value = Nothing
-        SmartTreeViewNode21.Tag = Nothing
-        SmartTreeViewNode21.Text = "Create Reports"
-        SmartTreeViewNode21.Value = Nothing
-        SmartTreeViewNode19.Nodes.Add(SmartTreeViewNode20)
-        SmartTreeViewNode19.Nodes.Add(SmartTreeViewNode21)
-        SmartTreeViewNode19.Tag = Nothing
-        SmartTreeViewNode19.Text = "Accountant"
-        SmartTreeViewNode19.Value = Nothing
-        SmartTreeViewNode15.Nodes.Add(SmartTreeViewNode16)
-        SmartTreeViewNode15.Nodes.Add(SmartTreeViewNode19)
-        SmartTreeViewNode15.Tag = Nothing
-        SmartTreeViewNode15.Text = "Roles and permissions"
-        SmartTreeViewNode15.Value = Nothing
-        Me.SmartTreeView2.Nodes.Add(SmartTreeViewNode15)
+        SmartTreeViewNode1.Expanded = True
+        SmartTreeViewNode3.Tag = Nothing
+        SmartTreeViewNode3.Text = "View Users"
+        SmartTreeViewNode3.Value = Nothing
+        SmartTreeViewNode4.Tag = Nothing
+        SmartTreeViewNode4.Text = "View accounts"
+        SmartTreeViewNode4.Value = Nothing
+        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode3)
+        SmartTreeViewNode2.Nodes.Add(SmartTreeViewNode4)
+        SmartTreeViewNode2.Tag = Nothing
+        SmartTreeViewNode2.Text = "Admin"
+        SmartTreeViewNode2.Value = Nothing
+        SmartTreeViewNode6.Tag = Nothing
+        SmartTreeViewNode6.Text = "View acounts"
+        SmartTreeViewNode6.Value = Nothing
+        SmartTreeViewNode7.Tag = Nothing
+        SmartTreeViewNode7.Text = "Create Reports"
+        SmartTreeViewNode7.Value = Nothing
+        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode6)
+        SmartTreeViewNode5.Nodes.Add(SmartTreeViewNode7)
+        SmartTreeViewNode5.Tag = Nothing
+        SmartTreeViewNode5.Text = "Accountant"
+        SmartTreeViewNode5.Value = Nothing
+        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode2)
+        SmartTreeViewNode1.Nodes.Add(SmartTreeViewNode5)
+        SmartTreeViewNode1.Tag = Nothing
+        SmartTreeViewNode1.Text = "Roles and permissions"
+        SmartTreeViewNode1.Value = Nothing
+        Me.SmartTreeView2.Nodes.Add(SmartTreeViewNode1)
         Me.SmartTreeView2.ParentNodeBackColor = System.Drawing.Color.Teal
         Me.SmartTreeView2.ShowNodeDividers = True
         Me.SmartTreeView2.Size = New System.Drawing.Size(200, 220)
@@ -100,42 +99,41 @@ Partial Class ControlsDemoForm
         Me.SmartTreeView1.CheckMode = JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton
         Me.SmartTreeView1.Font = New System.Drawing.Font("Segoe UI", 9.0!)
         Me.SmartTreeView1.ForeColor = System.Drawing.Color.Black
-        Me.SmartTreeView1.GrandParentNodeBackColor = System.Drawing.Color.Yellow
-        Me.SmartTreeView1.IndicatorSize = 10
+        Me.SmartTreeView1.GrandParentNodeBackColor = System.Drawing.Color.LightYellow
         Me.SmartTreeView1.Location = New System.Drawing.Point(182, 28)
         Me.SmartTreeView1.Name = "SmartTreeView1"
         Me.SmartTreeView1.NodeDividerColor = System.Drawing.Color.FromArgb(CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer), CType(CType(224, Byte), Integer))
         Me.SmartTreeView1.NodeHeight = 25
-        SmartTreeViewNode22.Expanded = True
-        SmartTreeViewNode24.Tag = Nothing
-        SmartTreeViewNode24.Text = "View Users"
-        SmartTreeViewNode24.Value = Nothing
-        SmartTreeViewNode25.Tag = Nothing
-        SmartTreeViewNode25.Text = "View accounts"
-        SmartTreeViewNode25.Value = Nothing
-        SmartTreeViewNode23.Nodes.Add(SmartTreeViewNode24)
-        SmartTreeViewNode23.Nodes.Add(SmartTreeViewNode25)
-        SmartTreeViewNode23.Tag = Nothing
-        SmartTreeViewNode23.Text = "Admin"
-        SmartTreeViewNode23.Value = Nothing
-        SmartTreeViewNode27.Tag = Nothing
-        SmartTreeViewNode27.Text = "View acounts"
-        SmartTreeViewNode27.Value = Nothing
-        SmartTreeViewNode28.Tag = Nothing
-        SmartTreeViewNode28.Text = "Create Reports"
-        SmartTreeViewNode28.Value = Nothing
-        SmartTreeViewNode26.Nodes.Add(SmartTreeViewNode27)
-        SmartTreeViewNode26.Nodes.Add(SmartTreeViewNode28)
-        SmartTreeViewNode26.Tag = Nothing
-        SmartTreeViewNode26.Text = "Accountant"
-        SmartTreeViewNode26.Value = Nothing
-        SmartTreeViewNode22.Nodes.Add(SmartTreeViewNode23)
-        SmartTreeViewNode22.Nodes.Add(SmartTreeViewNode26)
-        SmartTreeViewNode22.Tag = Nothing
-        SmartTreeViewNode22.Text = "Roles and permissions"
-        SmartTreeViewNode22.Value = Nothing
-        Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode22)
-        Me.SmartTreeView1.ParentNodeBackColor = System.Drawing.Color.Teal
+        SmartTreeViewNode8.Expanded = True
+        SmartTreeViewNode10.Tag = Nothing
+        SmartTreeViewNode10.Text = "View Users"
+        SmartTreeViewNode10.Value = Nothing
+        SmartTreeViewNode11.Tag = Nothing
+        SmartTreeViewNode11.Text = "View accounts"
+        SmartTreeViewNode11.Value = Nothing
+        SmartTreeViewNode9.Nodes.Add(SmartTreeViewNode10)
+        SmartTreeViewNode9.Nodes.Add(SmartTreeViewNode11)
+        SmartTreeViewNode9.Tag = Nothing
+        SmartTreeViewNode9.Text = "Admin"
+        SmartTreeViewNode9.Value = Nothing
+        SmartTreeViewNode13.Tag = Nothing
+        SmartTreeViewNode13.Text = "View acounts"
+        SmartTreeViewNode13.Value = Nothing
+        SmartTreeViewNode14.Tag = Nothing
+        SmartTreeViewNode14.Text = "Create Reports"
+        SmartTreeViewNode14.Value = Nothing
+        SmartTreeViewNode12.Nodes.Add(SmartTreeViewNode13)
+        SmartTreeViewNode12.Nodes.Add(SmartTreeViewNode14)
+        SmartTreeViewNode12.Tag = Nothing
+        SmartTreeViewNode12.Text = "Accountant"
+        SmartTreeViewNode12.Value = Nothing
+        SmartTreeViewNode8.Nodes.Add(SmartTreeViewNode9)
+        SmartTreeViewNode8.Nodes.Add(SmartTreeViewNode12)
+        SmartTreeViewNode8.Tag = Nothing
+        SmartTreeViewNode8.Text = "Roles and permissions"
+        SmartTreeViewNode8.Value = Nothing
+        Me.SmartTreeView1.Nodes.Add(SmartTreeViewNode8)
+        Me.SmartTreeView1.ParentNodeBackColor = System.Drawing.Color.LightBlue
         Me.SmartTreeView1.ShowNodeDividers = True
         Me.SmartTreeView1.Size = New System.Drawing.Size(200, 220)
         Me.SmartTreeView1.TabIndex = 4
