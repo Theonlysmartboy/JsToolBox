@@ -22,6 +22,7 @@ Namespace Controls.TreeView
         Private _selectedNodeBackColor As Color = Color.FromArgb(51, 153, 255)
         Private _selectedNodeForeColor As Color = Color.White
         Public Event NodeSelected As EventHandler(Of SmartTreeViewNodeEventArgs)
+        Private _updateCount As Integer = 0
 
         Public Sub New()
             _nodes = New SmartTreeViewNodeCollection(Nothing)
@@ -153,6 +154,36 @@ Namespace Controls.TreeView
             End Get
         End Property
 
+        ''' <summary>
+        ''' Suspends painting while multiple changes are made to the tree.
+        ''' Calls to BeginUpdate can be nested.
+        ''' </summary>
+        Public Sub BeginUpdate()
+            _updateCount += 1
+
+            If _updateCount = 1 Then
+                SuspendLayout()
+            End If
+        End Sub
+
+        ''' <summary>
+        ''' Resumes painting after a batch of changes.
+        ''' Calls to EndUpdate must match calls to BeginUpdate.
+        ''' </summary>
+        Public Sub EndUpdate()
+            If _updateCount <= 0 Then
+                _updateCount = 0
+                Return
+            End If
+
+            _updateCount -= 1
+
+            If _updateCount = 0 Then
+                ResumeLayout(True)
+                Invalidate()
+            End If
+        End Sub
+
         ' Nodes
         <DesignerSerializationVisibility(DesignerSerializationVisibility.Content)>
         Public ReadOnly Property Nodes As SmartTreeViewNodeCollection
@@ -164,19 +195,40 @@ Namespace Controls.TreeView
         ' Painting
         Protected Overrides Sub OnPaint(e As PaintEventArgs)
             MyBase.OnPaint(e)
-            If _initializing Then
+            If _updateCount > 0 Then
                 Return
             End If
             _hitTestItems.Clear()
-            Dim currentY As Integer = -_scrollOffset
-            For Each node As SmartTreeViewNode In _nodes
-                DrawNode(e.Graphics, node, 0, currentY)
-            Next
+            ' Make sure scrollbar/content measurements are current.
+            UpdateScrollBar()
+            ' The scrollbar occupies part of the control.
+            Dim drawingWidth As Integer = ClientSize.Width
+            If _vScrollBar IsNot Nothing AndAlso _vScrollBar.Visible Then
+                drawingWidth -= _vScrollBar.Width
+            End If
+            If drawingWidth <= 0 Then
+                Return
+            End If
+            ' Clip drawing to the area that does NOT contain the scrollbar.
+            Dim oldClip As Region = e.Graphics.Clip
+            Try
+                e.Graphics.SetClip(New Rectangle(0, 0, drawingWidth, ClientSize.Height),
+            CombineMode.Replace)
+                ' Start above the visible area by the current scroll amount.
+                Dim currentY As Integer = -_scrollOffset
+                For Each node As SmartTreeViewNode In _nodes
+                    DrawNode(e.Graphics, node, 0, currentY, drawingWidth)
+                Next
+            Finally
+                e.Graphics.Clip = oldClip
+                oldClip.Dispose()
+            End Try
         End Sub
 
-        Private Sub DrawNode(graphics As Graphics, node As SmartTreeViewNode, level As Integer, ByRef currentY As Integer)
+        Private Sub DrawNode(graphics As Graphics, node As SmartTreeViewNode, level As Integer, ByRef currentY As Integer,
+                            drawingWidth As Integer)
             Dim x As Integer = level * IndentWidth
-            Dim nodeBounds As New Rectangle(0, currentY, Width, NodeHeight)
+            Dim nodeBounds As New Rectangle(0, currentY, drawingWidth, NodeHeight)
             ' Hierarchy background
             Dim backgroundColor As Color
             If node.Selected Then
@@ -244,30 +296,32 @@ Namespace Controls.TreeView
             If ShowNodeDividers Then
                 Dim dividerColor As Color = If(NodeDividerColor = Color.Empty, Color.LightGray, NodeDividerColor)
                 Using dividerPen As New Pen(dividerColor)
-                    graphics.DrawLine(dividerPen, 0, currentY + NodeHeight - 1, Width, currentY + NodeHeight - 1)
+                    graphics.DrawLine(dividerPen, 0, currentY + NodeHeight - 1, drawingWidth, currentY + NodeHeight - 1)
                 End Using
             End If
             currentY += NodeHeight
             ' Children
             If node.Expanded AndAlso node.HasChildren Then
                 For Each child As SmartTreeViewNode In node.Nodes
-                    DrawNode(graphics, child, level + 1, currentY)
+                    DrawNode(graphics, child, level + 1, currentY, drawingWidth)
                 Next
             End If
         End Sub
 
         ' Hierarchy background
         Private Function GetNodeBackgroundColor(node As SmartTreeViewNode, level As Integer) As Color
-            Select Case level
-                Case 0
-                    If GrandParentNodeBackColor <> Color.Empty Then
-                        Return GrandParentNodeBackColor
-                    End If
-                Case 1
-                    If ParentNodeBackColor <> Color.Empty Then
-                        Return ParentNodeBackColor
-                    End If
-            End Select
+            ' Root / top-level nodes that have children.
+            If level = 0 AndAlso node.HasChildren Then
+                If GrandParentNodeBackColor <> Color.Empty Then
+                    Return GrandParentNodeBackColor
+                End If
+            End If
+            ' Actual parent nodes below the root.
+            If level > 0 AndAlso node.HasChildren Then
+                If ParentNodeBackColor <> Color.Empty Then
+                    Return ParentNodeBackColor
+                End If
+            End If
             Return Color.Empty
         End Function
 
@@ -285,20 +339,18 @@ Namespace Controls.TreeView
             If _contentHeight <= availableHeight Then
                 _scrollOffset = 0
                 _vScrollBar.Visible = False
+                _vScrollBar.Value = 0
                 Return
             End If
             Dim maxScroll As Integer = Math.Max(0, _contentHeight - availableHeight)
-            ' Prevent invalid scrollbar values.
             _scrollOffset = Math.Max(0, Math.Min(_scrollOffset, maxScroll))
             _vScrollBar.Minimum = 0
-            ' LargeChange represents the visible portion.
-            _vScrollBar.LargeChange = Math.Max(1, availableHeight)
             _vScrollBar.SmallChange = Math.Max(1, NodeHeight)
-            ' WinForms scrollbar Maximum includes LargeChange.
+            _vScrollBar.LargeChange = Math.Max(1, availableHeight)
+            ' WinForms VScrollBar.Maximum includes the LargeChange range.
             _vScrollBar.Maximum = maxScroll + _vScrollBar.LargeChange - 1
-            Dim maximumValue As Integer =
-        Math.Max(_vScrollBar.Minimum, _vScrollBar.Maximum - _vScrollBar.LargeChange + 1)
-            _vScrollBar.Value = Math.Min(_scrollOffset, maximumValue)
+            Dim maxValue As Integer = Math.Max(_vScrollBar.Minimum, _vScrollBar.Maximum - _vScrollBar.LargeChange + 1)
+            _vScrollBar.Value = Math.Min(_scrollOffset, maxValue)
             _vScrollBar.Visible = True
         End Sub
 
@@ -457,32 +509,34 @@ Namespace Controls.TreeView
         ' Mouse Interaction
         Protected Overrides Sub OnMouseDown(e As MouseEventArgs)
             MyBase.OnMouseDown(e)
+            If _updateCount > 0 Then
+                Return
+            End If
             If e.Button <> MouseButtons.Left Then
                 Return
             End If
             For Each item As SmartTreeViewHitTestInfo In _hitTestItems
-                ' Expand / Collapse
-                ' The expand/collapse glyph always has priority.
-                If item.GlyphBounds.Contains(e.Location) Then
-                    If item.Node.HasChildren AndAlso item.Node.Enabled Then
-                        item.Node.Expanded = Not item.Node.Expanded
-                        UpdateScrollBar()
-                        Invalidate()
-                    End If
-                    Return
-                End If
-                ' Checkbox / Radio Button
-                ' This changes Checked only without changing Selected.
-                If CheckMode <> SmartTreeViewCheckMode.None AndAlso item.IndicatorBounds.Contains(e.Location) Then
+                ' CheckBox / RadioButton
+                ' This must be checked BEFORE the general node area.
+                If CheckMode <> SmartTreeViewCheckMode.None AndAlso item.IndicatorBounds <> Rectangle.Empty AndAlso item.IndicatorBounds.Contains(e.Location) Then
                     If item.Node.Enabled Then
                         CheckNode(item.Node)
                     End If
                     Return
                 End If
-                ' Node text
-                ' This changes Selected only.
-                ' It does NOT change Checked.
-                If item.TextBounds.Contains(e.Location) Then
+                ' Expand / Collapse
+                If item.GlyphBounds <> Rectangle.Empty AndAlso item.GlyphBounds.Contains(e.Location) Then
+                    If item.Node.HasChildren AndAlso item.Node.Enabled Then
+                        item.Node.Expanded = Not item.Node.Expanded
+                        ' Recalculate scrollbar because expanding/collapsing
+                        ' changes the content height.
+                        UpdateScrollBar()
+                        Invalidate()
+                    End If
+                    Return
+                End If
+                ' Node area
+                If item.NodeBounds.Contains(e.Location) Then
                     If item.Node.Enabled Then
                         SelectNode(item.Node)
                     End If
@@ -504,8 +558,8 @@ Namespace Controls.TreeView
                 Return
             End If
             _scrollOffset = newOffset
-            Dim maximumValue As Integer = Math.Max(_vScrollBar.Minimum, _vScrollBar.Maximum - _vScrollBar.LargeChange + 1)
-            _vScrollBar.Value = Math.Min(_scrollOffset, maximumValue)
+            Dim maxValue As Integer = Math.Max(_vScrollBar.Minimum, _vScrollBar.Maximum - _vScrollBar.LargeChange + 1)
+            _vScrollBar.Value = Math.Min(_scrollOffset, maxValue)
             Invalidate()
         End Sub
 
@@ -541,13 +595,13 @@ Namespace Controls.TreeView
             ElseIf item.NodeBounds.Bottom > visibleHeight Then
                 _scrollOffset += item.NodeBounds.Bottom - visibleHeight
             End If
-            _scrollOffset = Math.Max(0, _scrollOffset)
             Dim maxScroll As Integer = Math.Max(0, _contentHeight - visibleHeight)
-            _scrollOffset = Math.Min(_scrollOffset, maxScroll)
+            _scrollOffset = Math.Max(0, Math.Min(_scrollOffset, maxScroll))
             If _vScrollBar.Visible Then
-                Dim maxValue As Integer = _vScrollBar.Maximum - _vScrollBar.LargeChange + 1
-                _vScrollBar.Value = Math.Min(_scrollOffset, Math.Max(0, maxValue))
+                Dim maxValue As Integer = Math.Max(0, _vScrollBar.Maximum - _vScrollBar.LargeChange + 1)
+                _vScrollBar.Value = Math.Min(_scrollOffset, maxValue)
             End If
+            Invalidate()
         End Sub
 
         Private Sub CheckNode(node As SmartTreeViewNode)

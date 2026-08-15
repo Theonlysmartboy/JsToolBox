@@ -48,6 +48,10 @@
     <OptionInfer>On</OptionInfer>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.6.4.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\SmsEngine\SmsEngine\bin\Debug\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
@@ -80,12 +84,14 @@
     <Compile Include="ChartDemoForm.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="ControlsDemoForm.Designer.vb">
+    <Compile Include="Controls\ControlsDemoForm.Designer.vb">
       <DependentUpon>ControlsDemoForm.vb</DependentUpon>
     </Compile>
-    <Compile Include="ControlsDemoForm.vb">
+    <Compile Include="Controls\ControlsDemoForm.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="Controls\Security\UserPermissionRepository.vb" />
+    <Compile Include="Helpers\DatabaseHelper.vb" />
     <Compile Include="LoaderDemoForm.vb">
       <SubType>Form</SubType>
     </Compile>
@@ -108,12 +114,18 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Controls\TreeViewDemoForm.Designer.vb">
+      <DependentUpon>TreeViewDemoForm.vb</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\TreeViewDemoForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ChartDemoForm.resx">
       <DependentUpon>ChartDemoForm.vb</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="ControlsDemoForm.resx">
+    <EmbeddedResource Include="Controls\ControlsDemoForm.resx">
       <DependentUpon>ControlsDemoForm.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="LoaderDemoForm.resx">
@@ -124,6 +136,9 @@
       <LastGenOutput>Resources.Designer.vb</LastGenOutput>
       <CustomToolNamespace>My.Resources</CustomToolNamespace>
       <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Controls\TreeViewDemoForm.resx">
+      <DependentUpon>TreeViewDemoForm.vb</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
@@ -144,5 +159,6 @@
       <Name>JsToolBox</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
 </Project>

@@ -16,9 +16,11 @@ Public Class ControlsDemoForm
         Dim customers = _tree.Nodes.Add("Customers")
         customers.Id = 1
         customers.Value = "CUSTOMERS"
+        customers.Tag = "CUSTOMERS"
         Dim retail = customers.Nodes.Add("Retail Customers")
         retail.Id = 10
-        retail.Value = "RETAIL"
+        retail.Value = "RETAIL CUSTOMERS"
+        retail.Tag = "RETAIL CUSTOMERS"
         Dim customerA = retail.Nodes.Add("Customer A")
         customerA.Id = 101
         customerA.Value = "Customer A"
@@ -64,7 +66,6 @@ Public Class ControlsDemoForm
         _tree.Location = New Point(395, 28)
         _tree.Size = New Size(350, 480)
         Controls.Add(_tree)
-        'AddHandler _tree.MouseDown, AddressOf Tree_MouseDown
         AddHandler _tree.NodeSelected, AddressOf Tree_NodeSelected
     End Sub
 
