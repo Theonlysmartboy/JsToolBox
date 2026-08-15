@@ -80,4 +80,9 @@ Public Class LoaderDemoForm
         Dim controlsForm As New ControlsDemoForm()
         controlsForm.ShowDialog()
     End Sub
+
+    Private Sub TreeViewToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TreeViewToolStripMenuItem.Click
+        Dim treeViewForm As New TreeViewDemoForm()
+        treeViewForm.ShowDialog()
+    End Sub
 End Class
