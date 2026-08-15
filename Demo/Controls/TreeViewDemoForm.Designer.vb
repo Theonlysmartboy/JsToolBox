@@ -23,7 +23,7 @@ Partial Class TreeViewDemoForm
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
         Me.cmbUsers = New System.Windows.Forms.ComboBox()
-        Me.lblUsers = New System.Windows.Forms.Label()
+        Me.lblPermissions = New System.Windows.Forms.Label()
         Me.lblAssignedRoles = New System.Windows.Forms.Label()
         Me.txtDetails = New System.Windows.Forms.TextBox()
         Me.stvPermissions = New JsToolBox.Controls.TreeView.SmartTreeView()
@@ -37,14 +37,14 @@ Partial Class TreeViewDemoForm
         Me.cmbUsers.Size = New System.Drawing.Size(250, 21)
         Me.cmbUsers.TabIndex = 1
         '
-        'lblUsers
+        'lblPermissions
         '
-        Me.lblUsers.AutoSize = True
-        Me.lblUsers.Location = New System.Drawing.Point(9, 44)
-        Me.lblUsers.Name = "lblUsers"
-        Me.lblUsers.Size = New System.Drawing.Size(39, 13)
-        Me.lblUsers.TabIndex = 2
-        Me.lblUsers.Text = "Label1"
+        Me.lblPermissions.AutoSize = True
+        Me.lblPermissions.Location = New System.Drawing.Point(9, 44)
+        Me.lblPermissions.Name = "lblPermissions"
+        Me.lblPermissions.Size = New System.Drawing.Size(39, 13)
+        Me.lblPermissions.TabIndex = 2
+        Me.lblPermissions.Text = "Label1"
         '
         'lblAssignedRoles
         '
@@ -85,7 +85,7 @@ Partial Class TreeViewDemoForm
         Me.ClientSize = New System.Drawing.Size(800, 561)
         Me.Controls.Add(Me.txtDetails)
         Me.Controls.Add(Me.lblAssignedRoles)
-        Me.Controls.Add(Me.lblUsers)
+        Me.Controls.Add(Me.lblPermissions)
         Me.Controls.Add(Me.cmbUsers)
         Me.Controls.Add(Me.stvPermissions)
         Me.Name = "TreeViewDemoForm"
@@ -97,7 +97,7 @@ Partial Class TreeViewDemoForm
 
     Friend WithEvents stvPermissions As JsToolBox.Controls.TreeView.SmartTreeView
     Friend WithEvents cmbUsers As ComboBox
-    Friend WithEvents lblUsers As Label
+    Friend WithEvents lblPermissions As Label
     Friend WithEvents lblAssignedRoles As Label
     Friend WithEvents txtDetails As TextBox
 End Class

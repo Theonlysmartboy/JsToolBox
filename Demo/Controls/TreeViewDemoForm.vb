@@ -81,21 +81,20 @@ Public Class TreeViewDemoForm
         End If
         Try
             _currentUserId = userId
-            Dim roles = _repository.GetRolesForUser(userId)
-            Dim permissions = _repository.GetAllPermissions()
-            Dim effectivePermissionIds = _repository.GetEffectivePermissionIds(userId)
+            Dim roles As DataTable = _repository.GetRolesForUser(userId)
+            Dim permissions As DataTable = _repository.GetAllPermissions()
+            Dim effectivePermissionIds As HashSet(Of Long) = _repository.GetEffectivePermissionIds(userId)
             BuildPermissionTree(permissions, effectivePermissionIds)
             DisplayUserRoles(roles)
+            lblPermissions.Text = "Permissions: " & effectivePermissionIds.Count.ToString()
         Catch ex As Exception
             MessageBox.Show("Unable to load user permissions." &
-                Environment.NewLine & Environment.NewLine &
-                ex.Message, "Permission Error", MessageBoxButtons.OK,
-                            MessageBoxIcon.Error)
+            Environment.NewLine & Environment.NewLine &
+            ex.Message, "Permission Error", MessageBoxButtons.OK, MessageBoxIcon.Error)
         End Try
     End Sub
 
-    Private Sub BuildPermissionTree(permissions As DataTable,
-                                    checkedPermissionIds As HashSet(Of Long))
+    Private Sub BuildPermissionTree(permissions As DataTable, checkedPermissionIds As HashSet(Of Long))
         stvPermissions.BeginUpdate()
         Try
             stvPermissions.Nodes.Clear()
