@@ -6,27 +6,16 @@ JsToolBox
 </name>
 </assembly>
 <members>
-<member name="T:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode">
+<member name="M:JsToolBox.Controls.TreeView.SmartTreeView.BeginUpdate">
  <summary>
- Determines whether the SmartTreeView displays
- checkbox or radio-button indicators.
+ Suspends painting while multiple changes are made to the tree.
+ Calls to BeginUpdate can be nested.
  </summary>
 </member>
-<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.None">
+<member name="M:JsToolBox.Controls.TreeView.SmartTreeView.EndUpdate">
  <summary>
- No checkbox or radio-button indicator is displayed.
- </summary>
-</member>
-<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.CheckBox">
- <summary>
- Display checkbox indicators.
- Multiple nodes may be checked.
- </summary>
-</member>
-<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton">
- <summary>
- Display radio-button indicators.
- Only one node may be checked at a time.
+ Resumes painting after a batch of changes.
+ Calls to EndUpdate must match calls to BeginUpdate.
  </summary>
 </member>
 <member name="T:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckState">
@@ -53,6 +42,29 @@ JsToolBox
  <summary>
  Determines the position of the checkbox or radio button
  relative to the node text.
+ </summary>
+</member>
+<member name="T:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode">
+ <summary>
+ Determines whether the SmartTreeView displays
+ checkbox or radio-button indicators.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.None">
+ <summary>
+ No checkbox or radio-button indicator is displayed.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.CheckBox">
+ <summary>
+ Display checkbox indicators.
+ Multiple nodes may be checked.
+ </summary>
+</member>
+<member name="F:JsToolBox.Controls.TreeView.Enums.SmartTreeViewCheckMode.RadioButton">
+ <summary>
+ Display radio-button indicators.
+ Only one node may be checked at a time.
  </summary>
 </member>
 </members>
