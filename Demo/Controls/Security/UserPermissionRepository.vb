@@ -16,7 +16,7 @@ Public Class UserPermissionRepository
 
     Public Function GetUsers() As DataTable
         Const sql As String = "SELECT id, name, username, email " &
-            "FROM users ORDER BY name;"
+            "FROM users ORDER BY id;"
         Return ExecuteDataTable(sql)
     End Function
 
@@ -27,7 +27,7 @@ Public Class UserPermissionRepository
             "ON mhr.role_id = r.id " &
             "WHERE mhr.model_id = @userId " &
             "AND mhr.model_type = @modelType " &
-            "ORDER BY r.name;"
+            "ORDER BY r.id;"
         Dim parameters As New List(Of MySqlParameter) From {
             New MySqlParameter("@userId", MySqlDbType.UInt64) With {
                 .Value = userId
@@ -43,7 +43,7 @@ Public Class UserPermissionRepository
         Const sql As String = "SELECT id, name, guard_name " &
             "FROM permissions " &
             "WHERE guard_name = 'web' " &
-            "ORDER BY name;"
+            "ORDER BY id;"
         Return ExecuteDataTable(sql)
     End Function
 

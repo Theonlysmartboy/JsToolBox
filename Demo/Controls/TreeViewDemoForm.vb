@@ -94,12 +94,14 @@ Public Class TreeViewDemoForm
         End Try
     End Sub
 
-    Private Sub BuildPermissionTree(permissions As DataTable, checkedPermissionIds As HashSet(Of Long))
+    Private Sub BuildPermissionTree(
+    permissions As DataTable,
+    checkedPermissionIds As HashSet(Of Long))
         stvPermissions.BeginUpdate()
         Try
             stvPermissions.Nodes.Clear()
             Dim modules As New Dictionary(Of String,
-                SmartTreeViewNode)(StringComparer.OrdinalIgnoreCase)
+            SmartTreeViewNode)(StringComparer.OrdinalIgnoreCase)
             For Each row As DataRow In permissions.Rows
                 Dim permissionId As Long = Convert.ToInt64(row("id"))
                 Dim permissionName As String = row("name").ToString().Trim()
@@ -114,18 +116,72 @@ Public Class TreeViewDemoForm
                     moduleNode = stvPermissions.Nodes.Add(moduleName)
                     moduleNode.Value = moduleName
                     moduleNode.Tag = "MODULE"
-                    moduleNode.Expanded = True
+                    ' IMPORTANT:
+                    ' Do not expand here.
+                    moduleNode.Expanded = False
                     modules.Add(moduleName, moduleNode)
                 End If
-                Dim permissionNode = moduleNode.Nodes.Add(actionName)
+                Dim permissionNode As SmartTreeViewNode = moduleNode.Nodes.Add(actionName)
                 permissionNode.Id = permissionId
                 permissionNode.Value = permissionName
                 permissionNode.Tag = "PERMISSION"
-                permissionNode.Checked = checkedPermissionIds.Contains(permissionId)
+                permissionNode.Checked =
+                checkedPermissionIds.Contains(permissionId)
             Next
+            ' Set expansion state AFTER the complete tree has been built.
+            SetPermissionTreeExpansion(checkedPermissionIds)
         Finally
             stvPermissions.EndUpdate()
         End Try
+    End Sub
+
+    Private Sub SetPermissionTreeExpansion(checkedPermissionIds As HashSet(Of Long))
+        ' Nothing checked -> collapse everything.
+        If checkedPermissionIds Is Nothing OrElse checkedPermissionIds.Count = 0 Then
+            For Each moduleNode As SmartTreeViewNode In stvPermissions.Nodes
+                moduleNode.Expanded = False
+            Next
+            Return
+        End If
+        Dim modulesWithCheckedPermissions As New List(Of SmartTreeViewNode)
+        ' Find modules containing checked permissions.
+        For Each moduleNode As SmartTreeViewNode In stvPermissions.Nodes
+            Dim hasCheckedPermission As Boolean = False
+            For Each permissionNode As SmartTreeViewNode In moduleNode.Nodes
+                If permissionNode.Checked Then
+                    hasCheckedPermission = True
+                    Exit For
+                End If
+            Next
+            If hasCheckedPermission Then
+                modulesWithCheckedPermissions.Add(moduleNode)
+            End If
+        Next
+        ' No matching modules -> collapse everything.
+        If modulesWithCheckedPermissions.Count = 0 Then
+            For Each moduleNode As SmartTreeViewNode In stvPermissions.Nodes
+                moduleNode.Expanded = False
+            Next
+            Return
+        End If
+        Dim totalModules As Integer = stvPermissions.Nodes.Count
+        Dim checkedModules As Integer = modulesWithCheckedPermissions.Count
+        ' "Most" = at least half of the available modules.
+        Dim mostModulesAreUsed As Boolean = checkedModules >= Math.Ceiling(totalModules / 2.0)
+        If mostModulesAreUsed Then
+            ' Many modules contain permissions.
+            ' Keep the tree compact by expanding only the first module.
+            For Each moduleNode As SmartTreeViewNode In stvPermissions.Nodes
+                moduleNode.Expanded = False
+            Next
+            stvPermissions.Nodes(0).Expanded = True
+        Else
+            ' Only a few modules contain permissions.
+            ' Expand those modules only.
+            For Each moduleNode As SmartTreeViewNode In stvPermissions.Nodes
+                moduleNode.Expanded = modulesWithCheckedPermissions.Contains(moduleNode)
+            Next
+        End If
     End Sub
 
     Private Sub SplitPermissionName(permissionName As String, ByRef moduleName As String,
